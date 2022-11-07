@@ -165,8 +165,7 @@ class User extends Controller
             'file_path' =>$userInfo['avatar_url'],
             'idname'=>$userInfo['idname'],
             'idcar'=>$userInfo['idcar'],
-            'address'=>$userInfo['address'],
-             'balance' =>$userInfo['balance'],
+            'address'=>$userInfo['address']
             // 'trade_pass'=>$userInfo['trade_pass']
         ], 'ok');
     }
@@ -348,7 +347,7 @@ class User extends Controller
         $user = Db::name('user')->field('trade_pass')->where('user_id', $user_id)->find();
 
         if($second_pswd == $user['trade_pass']) {
-            return $this->renderSuccess([], '修改成功');
+            return $this->renderSuccess([], '验证成功');
         }else{
             return $this->renderError('二级密码输入错误');
         }

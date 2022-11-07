@@ -42,7 +42,7 @@ class Transaction extends BaseModel
 
     public function goodsinfo()
     {
-        return $this->hasOne("Goods",'goods_id','goods_id')->field('goods_id,get_total,sales_initial,sales_actual,xn_sale');
+         return $this->hasOne("Goods",'goods_id','goods_id')->field('goods_id,get_total,sales_initial,sales_actual,xn_sale');
     }
 
     public function goodssn(){

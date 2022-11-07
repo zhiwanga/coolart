@@ -6,12 +6,18 @@ namespace app\api\service;
 
 class Nft
 {
-    //   private $nft = 'I2T2K170j39141t4';//平台标识  生产
-    private $nft = 'Q2x230O9p2p1';//平台标识  测试
-    private $apiKey = "D2G2o1R0O3l181W4B3o3Y3C6m9g8v8Ln";
-    private $apiSecret = "s2b261g0u3s1A1M4X333N3O6J9Y8B8zu";
-      private $domain = "https://stage.apis.avata.bianjie.ai";//test
-    // private $domain = "https://apis.avata.bianjie.ai/";//prod
+    //prod  生产
+       private $nft = 'I2T2K170j39141t4';//平台标识  生产
+       private $apiKey = "D2G2o1R0O3l181W4B3o3Y3C6m9g8v8Ln";
+       private $apiSecret = "s2b261g0u3s1A1M4X333N3O6J9Y8B8zu";
+       private $domain = "https://apis.avata.bianjie.ai/";
+      
+      //测试
+     //private $nft = 'Q2x230O9p2p1';//平台标识  
+     // private $apiKey = "D2m2U0H9f2E1f0P3G5b4v0z2U6L9r8c2";
+     //private $apiSecret = "a2p2u0s9g2f1a0Q3M5p4x0D2T6S9H87I";
+     // private $domain = "https://stage.apis.avata.bianjie.ai";//test
+  
 
     protected static $instance = null;
 

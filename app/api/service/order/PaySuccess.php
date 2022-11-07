@@ -139,9 +139,7 @@ class PaySuccess extends BaseService
             $price = $transaction['price'] * (100 - ($config['charges'] + $config['copyright'])) / 100;
             $transaction->save(['buyer_id' => $this->model['user_id'],'buytime' => time(),'status' => 1]); //交易状态修改
 
-            // 2022/11/7 注释
-            // Coll::update(['user_id' => $this->model['user_id'],'status' => 0,'addtime' => time()],['coll_id' => $transaction['coll_id']]); //转移到买房账上
-            (new OrderModel())->giveGoodModel($transaction['coll_id'], $this->model['user_id']);
+            Coll::update(['user_id' => $this->model['user_id'],'status' => 0,'addtime' => time()],['coll_id' => $transaction['coll_id']]); //转移到买房账上
 
             //变成未寄售
             Db::name('goods_sn')

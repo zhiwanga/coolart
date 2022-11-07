@@ -38,7 +38,7 @@ class AddWallet extends Command
                 'name'        => $u['user_id'],
                 'operation_id'=> $u['user_id'].rand(100,999)
             ]);
-
+    var_dump($result);
             if(!empty($result['data'])){
 
                 $u->save([

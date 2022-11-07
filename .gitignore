@@ -1,12 +1,7 @@
 /.idea
 /.vscode
 *.log
-/h5
 /headimg
-/node_modules
-!/public/index.php
-!/public/notice.php
-!/public/router.php
 /runtime
 /static
 /vendor
