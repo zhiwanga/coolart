@@ -1,0 +1,80 @@
+2022-06-11 18:08:15array (
+  's' => '/api/Huishouqian/notify',
+  'method' => 'CALLBACK',
+  'format' => 'json',
+  'sign' => '35d7164c89f53691e1c595aebd306507be0fdb65bc455214d44150b56b2d445b565f201e44e1473fb5a8bce86a6b0c8722b13d9279f5e285c8e36e7591f7aa6b3db795fe9ce0c67e36e2a96ef54e4ed36411c341c094de92f54685852bef27a42839f895e04e6dfe7db08724e3691d0f65ab8309632eda8302d68fc8cb0421ce',
+  'signType' => 'RSA2',
+  'signContent' => '{"buyerName":"omCqSs5KJfjgNUSODllptDTwvLzQ","channelOrderNo":"XSWXAPPLET0000000000000009302071","extend":"","finishedDate":"20220611180814","fundBankCode":"OTHERS","fundChannel":"OTHERS","goodsInfo":"藏品购买","memo":"{\\"openid\\":\\"oJzQq5VbQltz5RE51wPhe7DljEFw\\",\\"appid\\":\\"wx6ae51793b80b83ad\\",\\"latitude\\":\\"22.33\\",\\"spbillCreateIp\\":\\"113.201.249.73\\",\\"paylimit\\":\\"no_credit\\",\\"longitude\\":\\"171.21\\"}","orderAmt":"1000","orderStatus":"SUCCESS","payOrderNo":"4200001518202206119342187506","payType":"WECHAT_APPLET","requestDate":"20220611180806","respCode":"000000","respMsg":"交易成功","tradeNo":"25000020220512110129002796128878","transNo":"JD6421371931596282"}',
+  'version' => '1.0.0',
+  'merchantNo' => '850003352952',
+)
+2022-06-11 18:16:45array (
+  's' => '/api/Huishouqian/notify',
+  'method' => 'CALLBACK',
+  'format' => 'json',
+  'sign' => '9c4dc793fed4dbd030746bf0cad067b33b8ddf4b56d22f300098b0bb7c928f27aa57ee2e6e48c2b42d163f54f36d05452f588fdf246bd317eedf046d0707b075b24d1cc9f7a91ba218de13449e14e152a1357e18a30369e8f14adaf696194b01a11da2083650695f68025f6bc92b4a7af24686f34ffb9f4d05e438d2038a8b58',
+  'signType' => 'RSA2',
+  'signContent' => '{"buyerName":"omCqSs5KJfjgNUSODllptDTwvLzQ","channelOrderNo":"XSWXAPPLET0000000000000009352091","extend":"","finishedDate":"20220611181645","fundBankCode":"OTHERS","fundChannel":"OTHERS","goodsInfo":"藏品购买","memo":"{\\"openid\\":\\"oJzQq5VbQltz5RE51wPhe7DljEFw\\",\\"appid\\":\\"wx6ae51793b80b83ad\\",\\"latitude\\":\\"22.33\\",\\"spbillCreateIp\\":\\"113.201.249.73\\",\\"paylimit\\":\\"no_credit\\",\\"longitude\\":\\"171.21\\"}","orderAmt":"1000","orderStatus":"SUCCESS","payOrderNo":"4200001457202206116834409798","payType":"WECHAT_APPLET","requestDate":"20220611181638","respCode":"000000","respMsg":"交易成功","tradeNo":"25000020220512105953002796137089","transNo":"JD6864974365375919"}',
+  'version' => '1.0.0',
+  'merchantNo' => '850003352952',
+)
+2022-06-11 19:00:26array (
+  's' => '/api/Huishouqian/notify',
+  'method' => 'CALLBACK',
+  'format' => 'json',
+  'sign' => '070609da96f900cb91dd0efba446a0c52ab95eb704787db9bfae638cd776d233719a70964391df97e4feac12cdf919f331e259d64ca97690c772fb672f5436ffd6da3cb30d5be3e7a7dde1654a968e6c2d00140616d52aa3f0ba220e91fdf097dbd6c92370da60cf6bb4b42e9dc6c782aae0518b96ae3fbb1ff90c5f0e73af51',
+  'signType' => 'RSA2',
+  'signContent' => '{"buyerName":"omCqSs5KJfjgNUSODllptDTwvLzQ","channelOrderNo":"XSWXAPPLET0000000000000009402050","extend":"","finishedDate":"20220611190026","fundBankCode":"UPQUICKPASS","fundChannel":"DEBIT","goodsInfo":"藏品购买","memo":"{\\"openid\\":\\"oJzQq5VbQltz5RE51wPhe7DljEFw\\",\\"appid\\":\\"wx6ae51793b80b83ad\\",\\"latitude\\":\\"22.33\\",\\"spbillCreateIp\\":\\"113.201.249.73\\",\\"paylimit\\":\\"no_credit\\",\\"longitude\\":\\"171.21\\"}","orderAmt":"1000","orderStatus":"SUCCESS","payOrderNo":"4200001442202206114702161192","payType":"WECHAT_APPLET","requestDate":"20220611185950","respCode":"000000","respMsg":"交易成功","tradeNo":"25000020220512105835002796187030","transNo":"JD2240110509858489"}',
+  'version' => '1.0.0',
+  'merchantNo' => '850003352952',
+)
+2022-06-11 20:23:57array (
+  's' => '/api/Huishouqian/notify',
+  'method' => 'CALLBACK',
+  'format' => 'json',
+  'sign' => '7a2a2ac6e1a556648a9e6edbc4c3ba8193579a2162d28fcba19ce02fb8564363d6f4b0f46677c45a52482eda62bf4d5156566ec87881ca327142731b82754614722bbfde543d6f47d2f9777ad65de335d267520cdae88639b8fb94241294e0de87cf930cf7ffff6f70828d62f63aad278e2c563cd9ac8a306a617d7b3c0abe7e',
+  'signType' => 'RSA2',
+  'signContent' => '{"channelOrderNo":"XSALILIFE00000000000000007700016","extend":"","finishedDate":"20220611202357","goodsInfo":"藏品购买","memo":"{\\"openid\\":\\"2088441325181825\\",\\"appid\\":\\"wx6ae51793b80b83ad\\",\\"latitude\\":\\"22.33\\",\\"spbillCreateIp\\":\\"113.201.249.73\\",\\"paylimit\\":\\"credit_group\\",\\"longitude\\":\\"171.21\\"}","orderAmt":"1000","orderStatus":"FAIL","payOrderNo":"2022061122001481821438053923","payType":"ALI_JSAPI","requestDate":"20220611180708","respCode":"100204","respMsg":"订单已关闭，请使用新的订单号发起交易","tradeNo":"21000020220512110129002796128684","transNo":"JD9473336477735832"}',
+  'version' => '1.0.0',
+  'merchantNo' => '850003352952',
+)
+2022-06-11 20:55:41array (
+  's' => '/api/Huishouqian/notify',
+  'method' => 'CALLBACK',
+  'format' => 'json',
+  'sign' => 'ab27147570d98e1cd6aa36b0f01dc452db7531efa52c5b69a520265c520e3affe9480a54a6477712f4a3c83f0f24e0b74a53fd65c489d2e84a4afeec49473c1f25717aa2a3182b54171cc97a6f9b6443acee78c618d7acdeaa13851a5f7ab05bbd09b62a1c64658c3438e948365014f5877350f84b21334fb4279c7e8e9297cd',
+  'signType' => 'RSA2',
+  'signContent' => '{"channelOrderNo":"XSALILIFE00000000000000007750020","extend":"","finishedDate":"20220611205540","goodsInfo":"藏品购买","memo":"{\\"openid\\":\\"2088441325181825\\",\\"appid\\":\\"wx6ae51793b80b83ad\\",\\"latitude\\":\\"22.33\\",\\"spbillCreateIp\\":\\"113.201.249.73\\",\\"paylimit\\":\\"credit_group\\",\\"longitude\\":\\"171.21\\"}","orderAmt":"99900","orderStatus":"FAIL","payOrderNo":"2022061122001481821437445375","payType":"ALI_JSAPI","requestDate":"20220611183850","respCode":"100204","respMsg":"订单已关闭，请使用新的订单号发起交易","tradeNo":"21000020220512105833002796165528","transNo":"JD1496883074551680"}',
+  'version' => '1.0.0',
+  'merchantNo' => '850003352952',
+)
+2022-06-11 21:16:14array (
+  's' => '/api/Huishouqian/notify',
+  'method' => 'CALLBACK',
+  'format' => 'json',
+  'sign' => '99ce6be66fa424b61d5791f9f879a9ea5b7c951fe5e7c3f10e1f6ab315d88b9cc982915c00f3cc44fc41337eb3635db0f96b6702fd174c6a4677e65bf3193035307863864481a8c29994755c2cb920ab60b88e521df34e981fbafd6f1f436529ab81e8aae1f685db4b1960452fcdc1d2bd20e074c25463478e2b3525f2d470fc',
+  'signType' => 'RSA2',
+  'signContent' => '{"channelOrderNo":"XSALILIFE00000000000000007650024","extend":"","finishedDate":"20220611211613","goodsInfo":"藏品购买","memo":"{\\"openid\\":\\"2088441325181825\\",\\"appid\\":\\"wx6ae51793b80b83ad\\",\\"latitude\\":\\"22.33\\",\\"spbillCreateIp\\":\\"113.201.249.73\\",\\"paylimit\\":\\"credit_group\\",\\"longitude\\":\\"171.21\\"}","orderAmt":"1000","orderStatus":"FAIL","payOrderNo":"2022061122001481821438074290","payType":"ALI_JSAPI","requestDate":"20220611185924","respCode":"100204","respMsg":"订单已关闭，请使用新的订单号发起交易","tradeNo":"21000020220512105835002796186954","transNo":"JD6642446496724770"}',
+  'version' => '1.0.0',
+  'merchantNo' => '850003352952',
+)
+2022-06-11 21:27:09array (
+  's' => '/api/Huishouqian/notify',
+  'method' => 'CALLBACK',
+  'format' => 'json',
+  'sign' => '78d6fe69a5f01b088b8c64f390efe8d6db3df3e4298e07ea2b7032efd1a82f4776869b96a58143525ec231ad75f72eea527d3d98fa88993f8b45b58bfd629eeb529a8bbfcc4c0e9c60eef76c030995efaaada43c5b935e86f7d1f4e5203675c5af238000f99522bf586ccf30b8ec44dc3bd7ec3f4790603e4e415cd32dc1d95a',
+  'signType' => 'RSA2',
+  'signContent' => '{"buyerName":"omCqSs5KJfjgNUSODllptDTwvLzQ","channelOrderNo":"XSWXAPPLET0000000000000009252108","extend":"","finishedDate":"20220611212709","fundBankCode":"OTHERS","fundChannel":"OTHERS","goodsInfo":"藏品购买","memo":"{\\"openid\\":\\"oJzQq5VbQltz5RE51wPhe7DljEFw\\",\\"appid\\":\\"wx6ae51793b80b83ad\\",\\"latitude\\":\\"22.33\\",\\"spbillCreateIp\\":\\"113.201.249.73\\",\\"paylimit\\":\\"no_credit\\",\\"longitude\\":\\"171.21\\"}","orderAmt":"9900","orderStatus":"SUCCESS","payOrderNo":"4200001458202206118379799357","payType":"WECHAT_APPLET","requestDate":"20220611212659","respCode":"000000","respMsg":"交易成功","tradeNo":"25000020220512105953002796353847","transNo":"JD3730433880536357"}',
+  'version' => '1.0.0',
+  'merchantNo' => '850003352952',
+)
+2022-06-11 23:42:55array (
+  's' => '/api/Huishouqian/notify',
+  'method' => 'CALLBACK',
+  'format' => 'json',
+  'sign' => '16c6972424882f5370473636d29759b7935894e2e7a8f7b9b0fa569b11367004ef5f7177d6a9ec1f134517141e7990bed94cc494d98a3554e0796d7c872ac57e762d550b8c1ba242cfc458a8c854f542d2f3e67fc2a7baded7faabb697c212b3563b55fffad9f910e8e011a552acf055dead52bc91261e52dd69d63b5281427e',
+  'signType' => 'RSA2',
+  'signContent' => '{"channelOrderNo":"XSALILIFE00000000000000007650025","extend":"","finishedDate":"20220611234254","goodsInfo":"藏品购买","memo":"{\\"openid\\":\\"2088441325181825\\",\\"appid\\":\\"wx6ae51793b80b83ad\\",\\"latitude\\":\\"22.33\\",\\"spbillCreateIp\\":\\"113.201.249.73\\",\\"paylimit\\":\\"credit_group\\",\\"longitude\\":\\"171.21\\"}","orderAmt":"9900","orderStatus":"FAIL","payOrderNo":"2022061122001481821438198001","payType":"ALI_JSAPI","requestDate":"20220611212607","respCode":"100204","respMsg":"订单已关闭，请使用新的订单号发起交易","tradeNo":"21000020220512104132002796352469","transNo":"JD8491428177645334"}',
+  'version' => '1.0.0',
+  'merchantNo' => '850003352952',
+)
