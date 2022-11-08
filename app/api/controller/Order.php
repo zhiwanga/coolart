@@ -593,16 +593,17 @@ class Order extends Controller
             $transaction->save(['status' => 2]);
 
             if($pay_type == 'balance'){
-
-                // 获取订单详情
-                $model = $orderModel->getUserOrderDetail(intval($arrList['order_id']));
-
+                // 二级市场购买，查找别人订单信息
+                if($arrList) {
+                    $model['order_no'] = $arrList['order_no'];
+                }else{
+                    // 获取订单详情
+                    $model = $orderModel->getUserOrderDetail(intval($arrList['order_id']));
+                }
                 // 余额支付
                 if(!$orderModel->onPaymentByBalance($model['order_no'])){
 
                     throw new Exception('余额不足');
-
-
                 }
 
             }else if($pay_type == 'sd'){
