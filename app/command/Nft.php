@@ -42,7 +42,7 @@ class Nft extends Command
 
 
         /**自动关闭订单**/
-        $order = Order:: where('pay_status',10)->where('is_delete',0)->select();
+        $order = Order:: where('pay_status',10)->where('type', 0)->where('is_delete',0)->select();
 
         $not_cofig = Setting::getItem('box',10001)['price'];
 
