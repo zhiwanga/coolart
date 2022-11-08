@@ -136,6 +136,13 @@ class PaySuccess extends BaseService
         }else{
             $transaction = Transaction::get($this->model['transaction_id']);
             $config = Integrals::field('charges,copyright')->find();
+            
+            // 如果商品单独设置了手续费则使用商品的
+            $rate = Db::name('goods')->where('goods_id', $transaction['goods_id'])->value('rate');
+            if(0 != $rate) {
+                $config['charges'] = $rate;
+            }
+
             $price = $transaction['price'] * (100 - ($config['charges'] + $config['copyright'])) / 100;
             $transaction->save(['buyer_id' => $this->model['user_id'],'buytime' => time(),'status' => 1]); //交易状态修改
 
