@@ -9,3 +9,5 @@
 /www
 /addons
 .env
+/public
+.gitignore
