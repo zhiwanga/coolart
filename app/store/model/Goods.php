@@ -85,7 +85,7 @@ class Goods extends GoodsModel
         if ($goodsInfo['first'] == 1 && !empty($goodsInfo['first_goods_id'])){
             $first_goods_id = json_decode($goodsInfo['first_goods_id'],true);
             foreach ($first_goods_id as &$value){
-                $good = GoodsModel::with(['images.file'])->where(['goods_id' => $value])->field('goods_id,goods_name,sales_initial,sales_actual')->find()->toArray();
+                $good = GoodsModel::with(['images.file'])->where(['goods_id' => $value])->field('goods_id,goods_name,sales_initial,sales_actual, reta')->find()->toArray();
                 $good['images'] = $good['images'][0]['file']['preview_url'];
                 $first_goods[] = $good;
             }
