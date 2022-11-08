@@ -286,7 +286,7 @@ class Goods extends GoodsModel
             ->join(['yoshop_upload_file'=>'uf'],'gi.image_id=uf.file_id')
             ->join(['yoshop_goods_sku'=>'gs'],'g.goods_id=gs.goods_id')
             ->field('g.get_total,g.get_limit,g.sales_actual,g.xn_sale')
-            ->field('g.type,g.endtime,g.maketime,g.publishtime,g.hot_starttime,g.hot_endtime,g.hot_ids,hot_type')
+            ->field('g.type,g.rate,g.endtime,g.maketime,g.publishtime,g.hot_starttime,g.hot_endtime,g.hot_ids,hot_type')
             ->field('g.goods_id,g.c_name,g.goods_name,g.stock_total,g.update_time,g.goods_price_min,g.status,g.file_path as images,uf.file_path')
             ->field('g.content,gs.stock_num,g.startTime,g.author,g.goods_address,g.logo,g.first_goods_id,first_goods_num,g.first,g.first_time,uf.file_id')
             ->find();
