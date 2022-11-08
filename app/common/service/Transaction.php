@@ -64,7 +64,7 @@ class Transaction extends BaseService
             ->where('coll_id',$collId)
             ->where('goods_id',$coll['goods_id'])
             ->update(['status'=>1]);
-
+        $time = time();
         // 转售增加订单
         $orderInsert = [
             'order_no'          => (new OrderModel)->orderNo(),
@@ -75,6 +75,10 @@ class Transaction extends BaseService
             'goods_id'          => $coll['goods_id'],
             'transaction_id'    => $res->id,
             'type'              => 1,
+            'pay_type'          => 0,
+            'store_id'          => 10001,
+            'create_time'       => $time,
+            'update_time'       => $time,
         ];
         Db::name('order')->insert($orderInsert);
 
