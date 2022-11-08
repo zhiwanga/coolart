@@ -67,7 +67,7 @@ class Transaction extends BaseService
         $time = time();
         // 转售增加订单
         $orderInsert = [
-            'order_no'          => (new OrderModel)->orderNo(),
+            'order_no'          => 'JD'.(new OrderModel)->orderNo(),
             'total_price'       => $price,
             'pay_price'         => $price,
             'order_price'       => $price,
@@ -77,6 +77,7 @@ class Transaction extends BaseService
             'type'              => 1,
             'pay_type'          => 0,
             'store_id'          => 10001,
+            'goods_sum'         => 1,
             'create_time'       => $time,
             'update_time'       => $time,
         ];

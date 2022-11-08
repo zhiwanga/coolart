@@ -535,26 +535,34 @@ class Order extends Controller
             $data = jdConfig();
             $data['requestNum'] = 'JD' . $orderNo;
             $data['amount'] = $transaction['price'];
-            //填充需要的数据
-            $goodsarr = [
-                'total_price' => $transaction['price'],
-                'order_price' => $transaction['price'],
-                'pay_price' => $transaction['price'],
-                'pay_status' => 10,//默认为未付款
-                'order_status' => 10,//默认为进行中
-                'user_id' => $user_id,
-                'store_id' => 10001,
-                'create_time' => time(),
-                'goods_id' => $transaction['goods_id'],
-                'goods_sum' => 1,
-                'order_no' => $data['requestNum'],
-                'points_bonus' => 0, //赠送的积分数量
-                'is_box' => 0,
-                'pay_type' => 20,   //京东付款
-                'type' => 1,   //京东付款
-                'transaction_id' => $transaction['id'],   //交易id
-            ];
-            $arrList = OrderModel::create($goodsarr); //创建订单
+            $arrList = OrderModel::field('order_id, order_no, pay_price')->where('transaction_id', $transactionId)->find();
+            // 查到订单了就是二级市场转卖的商品
+            if($arrList) {
+
+                OrderModel::where('order_id', $arrList['order_id'])->update(['order_status' => 30]);
+            }else{
+                //填充需要的数据
+                $goodsarr = [
+                    'total_price' => $transaction['price'],
+                    'order_price' => $transaction['price'],
+                    'pay_price' => $transaction['price'],
+                    'pay_status' => 10,//默认为未付款
+                    'order_status' => 10,//默认为进行中
+                    'user_id' => $user_id,
+                    'store_id' => 10001,
+                    'create_time' => time(),
+                    'goods_id' => $transaction['goods_id'],
+                    'goods_sum' => 1,
+                    'order_no' => $data['requestNum'],
+                    'points_bonus' => 0, //赠送的积分数量
+                    'is_box' => 0,
+                    'pay_type' => 20,   //京东付款
+                    'type' => 1,   //京东付款
+                    'transaction_id' => $transaction['id'],   //交易id
+                ];
+                $arrList = OrderModel::create($goodsarr); //创建订单
+            }
+
             //根据商品id获取商品信息
             $goodsList = Db::name('goods')
                 ->alias('g')
