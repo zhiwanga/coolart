@@ -10,4 +10,4 @@
 /addons
 .env
 /public
-.gitignore
+/h5
