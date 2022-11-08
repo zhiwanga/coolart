@@ -18,6 +18,7 @@ use app\common\model\UploadFile;
 use app\store\model\Setting;
 use app\api\service\User;
 use app\common\model\Order as OrderModel;
+use app\common\model\OrderGoods;
 use app\common\model\Transaction as TransactionModel;
 use think\facade\Db;
 
@@ -56,13 +57,26 @@ class Transaction extends BaseService
             'createtime' => time(),
             'goods_id' => $coll['goods_id']
         ];
-        TransactionModel::create($log);
+        $res = TransactionModel::create($log);
         $coll->save(['status' => 1]);
         //记录该编号为寄售中
         Db::name('goods_sn')
             ->where('coll_id',$collId)
             ->where('goods_id',$coll['goods_id'])
             ->update(['status'=>1]);
+
+        // 转售增加订单
+        $orderInsert = [
+            'order_no'          => (new OrderModel)->orderNo(),
+            'total_price'       => $price,
+            'pay_price'         => $price,
+            'order_price'       => $price,
+            'user_id'           => $user_id,
+            'goods_id'          => $coll['goods_id'],
+            'transaction_id'    => $res->id,
+            'type'              => 1,
+        ];
+        Db::name('order')->insert($orderInsert);
 
         return true;
     }
@@ -94,6 +108,8 @@ class Transaction extends BaseService
             ->where('coll_id',$collId)
             ->where('goods_id',$coll['goods_id'])
             ->update(['status'=>0]);
+
+        Db::name('order')->where('transaction_id', $transaction['id'])->update(['order_status' => 20]);
         return true;
     }
 
