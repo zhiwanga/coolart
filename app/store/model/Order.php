@@ -138,13 +138,14 @@ class Order extends OrderModel
     {
         // 默认参数
         $params = $this->setQueryDefaultValue($param, [
-            'searchType' => '',     // 关键词类型 (10订单号 20会员昵称 30会员ID)
+            'searchType' => '',     // 关键词类型 (10订单号 20会员昵称 30会员ID 40手机号码)
             'searchValue' => '',    // 关键词内容
             'orderSource' => -1,    // 订单来源
             'payType' => -1,        // 支付方式
             'deliveryType' => -1,   // 配送方式
             'betweenTime' => [],    // 起止时间
             'userId' => 0,          // 会员ID
+            'mobile' => '',         // 手机号码
         ]);
         // 检索查询条件
         $filter = [];
@@ -153,7 +154,8 @@ class Order extends OrderModel
             $searchWhere = [
                 10 => ['order.order_no', 'like', "%{$params['searchValue']}%"],
                 20 => ['user.nick_name', 'like', "%{$params['searchValue']}%"],
-                30 => ['order.user_id', '=', (int)$params['searchValue']]
+                30 => ['order.user_id', '=', (int)$params['searchValue']],
+                40 => ['user.mobile', 'like', "%{$params['mobile']}%"],
             ];
             array_key_exists($params['searchType'], $searchWhere) && $filter[] = $searchWhere[$params['searchType']];
         }
