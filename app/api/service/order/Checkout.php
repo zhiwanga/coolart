@@ -1337,6 +1337,9 @@ class Checkout extends BaseService
                 case 30:
                     $status['o.pay_status'] = 20;
                     break;
+                case 20:
+                    $status['o.pay_status'] = 10;
+                        break;
 
             }
 
