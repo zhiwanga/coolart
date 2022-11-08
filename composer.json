@@ -44,7 +44,8 @@
         "yiovo/tp6-captcha": "^1.1",
         "qeq66/think-jump": "^1.2",
         "yansongda/pay": "^2.10",
-        "dh2y/think-qrcode": "^2.0"
+        "dh2y/think-qrcode": "^2.0",
+        "firebase/php-jwt": "^6.3"
     },
     "require-dev": {
         "symfony/var-dumper": "^4.2",

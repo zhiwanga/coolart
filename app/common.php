@@ -24,7 +24,7 @@ use cores\exception\BaseException;
 use cores\exception\DebugException;
 use think\exception\HttpResponseException;
 use Yansongda\Pay\Pay;
-
+use think\response\Json;
 /**
  * 打印调试函数 html
  * @param $content
@@ -713,4 +713,21 @@ function jdConfigBank(){
     ];
 
     return $data;
+}
+
+function renderSuccess($data = [], string $message = 'success'): Json
+{
+    if (is_string($data)) {
+        $message = $data;
+        $data = [];
+    }
+    return renderJson(config('status.success'), $message, $data);
+}
+function renderJson(int $status = null, string $message = '', array $data = []): Json
+{
+    return json(compact('status', 'message', 'data'));
+}
+function renderError(string $message = 'error', array $data = []): Json
+{
+    return renderJson(config('status.error'), $message, $data);
 }
