@@ -1355,6 +1355,15 @@ class Checkout extends BaseService
 
         }
 
+        // 我的转卖订单列表
+        $type = [];
+        if(isset($orderType['type']) && $orderType['type']) {
+            if(1 == $orderType['type']) {
+                $type['type'] = 0;
+            }else{
+                $type['type'] = 1;
+            }
+        }
 
         //$status = empty($orderType['order_status']) ? [] : ['o.order_status' => $orderType['order_status']];
         $orderList = DB::name('order')
@@ -1366,6 +1375,7 @@ class Checkout extends BaseService
             ->where('o.user_id', $userId)
             ->where('o.is_delete','=',$is_delete)
             ->where($status)
+            ->where($type)
             ->order('o.create_time', 'desc')
             ->paginate($listRows)->toArray();
 
