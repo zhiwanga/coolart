@@ -1,13 +1,14 @@
 /.idea
 /.vscode
 *.log
-/headimg
-/runtime
-/static
 /vendor
-/view
-/www
-/addons
 .env
-/public
-/h5
+/runtime
+
+# /headimg
+# /static
+# /view
+# /www
+# /addons
+# /public
+# /h5
