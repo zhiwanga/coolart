@@ -1,4 +1,5 @@
 <<<<<<< HEAD
+<<<<<<< HEAD
 location ~* (runtime|application)/{
 	return 403;
 }
@@ -12,4 +13,10 @@ location / {
    		rewrite  ^(.*)$  /index.php?s=/$1  last;
     }
 >>>>>>> 97de442374609cd47088712b56693b12ba4c5636
+=======
+location / {
+   if (!-e $request_filename) {
+   		rewrite  ^(.*)$  /index.php?s=/$1  last;
+    }
+>>>>>>> 588a41087f3b58d46fc5abbf932f282ef21891df
 }

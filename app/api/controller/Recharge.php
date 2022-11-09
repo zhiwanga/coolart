@@ -18,7 +18,12 @@ use app\common\enum\OrderType as OrderTypeEnum;
 use app\common\exception\BaseException;
 use app\common\library\H5pay as Sd;
 use app\common\model\UserIdcar;
-
+use app\common\model\Transaction;
+use app\api\model\User as UserModel;
+use think\facade\Db;
+use app\api\service\User as UserService;
+use app\common\model\user\BalanceLog;
+use app\common\enum\user\balanceLog\Scene as SceneEnum;
 
 /**
  * 用户充值管理
@@ -75,6 +80,26 @@ class Recharge extends Controller
                 return $this->renderError('请求失败');
 
             }else{
+
+
+            //   $payOrder = $model->where('order_id',$model['order_id'])->find();
+            //   $transaction = Transaction::get($this->$model['transaction_id']);
+            //   OrderModel::update(['order_id',$model['order_id'],'pay_status' => 20,'pay_time' => time(),'update_time' =>time()],['order_id' => $transaction['order_id']]); //转移到买房账上
+
+            //   $user_id = UserService::getCurrentLoginUserId();
+
+            //   $currentUser = Db::name('user')->field('balance')->where('user_id', $user_id)->find();
+            //   $balance = $currentUser['balance']+$model['pay_price'];
+       
+            //   Db::name('user')
+            //   ->where('user_id',$user['user_id'])
+            //   ->update(['balance'=>$balance]);
+
+            //       // 新增余额变动记录
+            //       BalanceLog::add(SceneEnum::CONSUME, [
+            //         'user_id' => (int)$user['user_id'],
+            //         'money' => -$model['pay_price'],
+            //     ], ['order_no' =>  $payOrder['order_no']]);
 
                 return $this->renderSuccess(['url'=>$result['pay_url']],'成功');
 
