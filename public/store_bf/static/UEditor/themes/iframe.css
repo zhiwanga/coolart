@@ -7,11 +7,19 @@ body {
   font-size: 14px;
 }
 
+<<<<<<< HEAD
 a {
     color: #3284e6;
     word-break: break-all;
 }
 
+=======
+a {
+    color: #3284e6;
+    word-break: break-all;
+}
+
+>>>>>>> 97de442374609cd47088712b56693b12ba4c5636
 p {
   margin: 0
 }

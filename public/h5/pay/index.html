@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="./vue.js"></script>
+    <script src="./axios.js"></script>
+    <title>支付</title>
+    <style>
+        .title {
+            display: block;
+            font-weight: bold;
+            font-size: 20px;
+            width:100%;
+            margin-top: 40%;
+            text-align: center;
+            opacity: 0;
+        }
+        .input-style {
+            position: absolute;
+            opacity: 0;
+        }
+        .button-style {
+            width:60%;
+            height: 40px;
+            font-size: 15px;
+            margin: 10px 20%;
+            background: green;
+            color: white;
+            border: none;
+            outline: none;
+            border-radius: 100px;
+            opacity: 0;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="app">
+        <span class="title">欢迎使用杉德支付</span>
+        <form ref="form" :action="formData.url" method="post">
+            <input class="input-style" name="data" :value="formData.data.data">
+            <input class="input-style" name="charset" :value="formData.data.charset">
+            <input class="input-style" name="sign" :value="formData.data.sign">
+            <input class="input-style" name="signType" :value="formData.data.signType">
+            <button class="button-style" type="submit">立即支付</button>
+        </form>
+    </div>
+</body>
+<script>
+    var app = new Vue({
+        el: '#app',
+        data: {
+            formData: {}
+        },
+        mounted: function () {
+            let pid = this.getVal('pid')
+            //使用 get 请求获取远程数据，浏览器执行远程 Ajax 请求会有跨域问题
+            axios.get('https://coolart.space/api/callback/get_pid/pid/' + pid)
+                .then(res => {
+                    this.formData = res.data.data
+                    this.$nextTick(() => {
+                        this.$refs.form.submit()
+                    })
+                })
+                .catch(err => {
+                    console.log('错误' + err)
+                })
+        },
+        methods: {
+            getVal(variable) {
+                var query = window.location.search.substring(1);
+                var vars = query.split("&");
+                for (var i = 0; i < vars.length; i++) {
+                    var pair = vars[i].split("=");
+                    if (pair[0] == variable) { return pair[1]; }
+                }
+                return (false);
+            }
+        },
+    })
+</script>
+
+</html>
