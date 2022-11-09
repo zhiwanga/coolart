@@ -137,7 +137,7 @@ class User extends UserModel
         $accountNo = '';
         //手机号
         $user_info = \app\common\model\User::where(['user_id' =>$user_id])->find();
-        var_dump($user_info);
+
         $mobile = $user_info['mobile'];
 
         $idcar = UserIdcar::where(['idcar_name' => $idcarname,'idcar' => $idcarnub])->find();
@@ -151,7 +151,7 @@ class User extends UserModel
         if ($idcar && $idcar['status'] == 1){
             return ['code' => 500,'msg' => '该实名信息已存在'];
         }
-
+        var_dump($mobile);
         $idcar = $this->idcarCha($idcarnub,$idcarname,$accountNo,$mobile);
         $result_json = json_decode($idcar,true);
         if(!empty($result_json) && $result_json['code'] == 0 && $result_json['data']['res'] == 1){
