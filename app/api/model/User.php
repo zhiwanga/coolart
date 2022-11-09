@@ -277,7 +277,7 @@ class User extends UserModel
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         }
         curl_setopt($curl, CURLOPT_POSTFIELDS, $bodys);
-        return curl_exec($curl);
+        var_dump(curl_exec($curl));die;
     }
 
 
