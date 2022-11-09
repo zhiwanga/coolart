@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 /.idea
 /.vscode
 *.log
@@ -6,27 +5,10 @@
 .env
 /runtime
 /public/uploads
+/public/.user.ini
 
 # /headimg
 # static
 # /view
 # /www
 # /addons
-=======
-
-/.idea
-/.vscode
-*.log
-/vendor
-.env
-/runtime
-/public/uploads
-
-# /headimg
-# static
-# /view
-# /www
-# /addons
-
->>>>>>> 588a41087f3b58d46fc5abbf932f282ef21891df
-# /h5
