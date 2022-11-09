@@ -270,14 +270,14 @@ class User extends UserModel
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
         //设定返回信息中是否包含响应信息头，启用时会将头文件的信息作为数据流输出，true 表示输出信息头, false表示不输出信息头
         //如果需要将字符串转成json，请将 CURLOPT_HEADER 设置成 false
-        curl_setopt($curl, CURLOPT_HEADER, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
         if (1 == strpos("$".$host, "https://"))
         {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
         }
         curl_setopt($curl, CURLOPT_POSTFIELDS, $bodys);
-        var_dump(curl_exec($curl));die;
+        return curl_exec($curl);
     }
 
 
