@@ -136,7 +136,7 @@ class User extends UserModel
         //银行卡
         $accountNo = '';
         //手机号
-        $user_info = \app\common\model\User::where(['user_id' =>$user_id])->find();
+        $user_info = Db::name('user')->where(['user_id' =>$user_id])->find();
         var_dump($user_info['mobile']);
         $mobile = $user_info['mobile'];
         $idcar = UserIdcar::where(['idcar_name' => $idcarname,'idcar' => $idcarnub])->find();
