@@ -144,7 +144,7 @@ class User extends UserModel
 
         if($idcar && $idcar['status'] == 0){
 
-            return ['code' => 200 ,'msg' => '请继续完成活体检测'];
+            return ['code' => 200 ,'msg' => '请继续完成实名认证'];
 
         }
 
@@ -153,22 +153,22 @@ class User extends UserModel
         }
 
         $idcar = $this->idcarCha($idcarnub,$idcarname,$accountNo,$mobile);
-        $result_json = json_decode($idcar,true);;
-        if(!empty($result_json) && $result_json['code'] == 10000 && $result_json['data']['result'] == 1){
+        $result_json = json_decode($idcar,true);
+        if(!empty($result_json) && $result_json['code'] == 0 && $result_json['data']['res'] == 1){
 
             $postlist = [
                 'idcar_name'    => $post['idcar_name'],
                 'idcar'         => $post['idcar'],
                 'account_no'    => $accountNo,
                 'mobile'        => $mobile,
-                'user_id' => $user_id
+                'user_id'       => $user_id
             ];
             //新增身份证数据
              UserIdcar::create($postlist);
 
-            return ['code' => 200,'msg' => '实名成功,完成活体检测'];
+            return ['code' => 200,'msg' => '实名认证成功'];
         }
-        return ['code' => 500,'msg' => '实名失败'];
+        return ['code' => 500,'msg' => '实名认证失败'];
     }
 
     //活体
@@ -208,12 +208,12 @@ class User extends UserModel
     }
 
     /**
-     * 实名认证
+     * 人脸实名认证（2022/11/9 更换为三要素认证）
      * @param $idcarnub
      * @param $idcarname
      * @return bool|string
      */
-    public function idcarCha($idcarnub,$idcarname,$accountNo,$mobile){
+    public function idcarCha_Abandonment($idcarnub,$idcarname,$accountNo,$mobile){
 
         $host = "http://api.chinadatapay.com";
         $path = "/communication/personal/1882";
@@ -250,6 +250,38 @@ class User extends UserModel
         }
         curl_setopt($curl, CURLOPT_POSTFIELDS, $params);
         return curl_exec($curl);
+    }
+
+    public function idcarCha($idcarnub,$idcarname,$accountNo,$mobile)
+    {
+        $host = "https://mobile3elements.shumaidata.com";
+        $path = "/mobile/verify_real_name";
+        $method = "POST";
+        $appcode = "2dc90be803904d8c9d6bcbc4f3481101";
+        $headers = array();
+        array_push($headers, "Authorization:APPCODE " . $appcode);
+        //根据API的要求，定义相对应的Content-Type
+        array_push($headers, "Content-Type".":"."application/x-www-form-urlencoded; charset=UTF-8");
+
+        $bodys = "idcard=".$idcarnub."&mobile=".$mobile."&name=".$idcarname;
+        $url = $host . $path;
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_FAILONERROR, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        //设定返回信息中是否包含响应信息头，启用时会将头文件的信息作为数据流输出，true 表示输出信息头, false表示不输出信息头
+        //如果需要将字符串转成json，请将 CURLOPT_HEADER 设置成 false
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        if (1 == strpos("$".$host, "https://"))
+        {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        }
+        curl_setopt($curl, CURLOPT_POSTFIELDS, $bodys);
+        var_dump(curl_exec($curl));exit;
     }
 
 
