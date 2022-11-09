@@ -137,7 +137,6 @@ class User extends UserModel
         $accountNo = '';
         //手机号
         $user_info = Db::name('user')->where(['user_id' =>$user_id])->find();
-        var_dump($user_info['mobile']);
         $mobile = $user_info['mobile'];
         $idcar = UserIdcar::where(['idcar_name' => $idcarname,'idcar' => $idcarnub])->find();
 
@@ -146,11 +145,9 @@ class User extends UserModel
             return ['code' => 200 ,'msg' => '请继续完成实名认证'];
 
         }
-        var_dump($mobile);
         if ($idcar && $idcar['status'] == 1){
             return ['code' => 500,'msg' => '该实名信息已存在'];
         }
-        var_dump($user_info['mobile']);die;
         $idcar = $this->idcarCha($idcarnub,$idcarname,$accountNo,$mobile);
         $result_json = json_decode($idcar,true);
         if(!empty($result_json) && $result_json['code'] == 0 && $result_json['data']['res'] == 1){
