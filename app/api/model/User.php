@@ -262,7 +262,7 @@ class User extends UserModel
         array_push($headers, "Authorization:APPCODE " . $appcode);
         //根据API的要求，定义相对应的Content-Type
         array_push($headers, "Content-Type".":"."application/x-www-form-urlencoded; charset=UTF-8");
-
+        var_dump($idcarnub, $mobile, $idcarname);
         $bodys = "idcard=".$idcarnub."&mobile=".$mobile."&name=".$idcarname;
         $url = $host . $path;
 
