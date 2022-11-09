@@ -40,15 +40,15 @@ class RealtGoods extends Model
             RealtGoods::where('goods_id', $goodsId)->update($update);
         }else{
             $insert = [
-                'goods_id'       => $goodsId,               // 商品ID
-                'order_no'       => $order_no,              // 订单号，用于追溯商品
-                'name'           => $info['goods_name'],    // 商品名称
+                'goods_id'       => $goodsId,                   // 商品ID
+                'order_no'       => $order_no,                  // 订单号，用于追溯商品
+                'name'           => $info['goods_name'],        // 商品名称
                 'image'          => 'https://coolart.space/uploads/'.$info['file_path'],     // 图片地址
-                'price'          => $price,                 // 购买价格
-                'circula_number' => $info['xn_sale'],       // 市场流通数量
-                'type'           => 0,                      // 交易类型1/0 (1表示可以寄售)
-                'sale_time'      => $info['startTime'],     // 预售时间
-                'sale_number'    => $info['xn_sale'],       // 发售数量
+                'price'          => $info['goods_price_min'],   // 购买价格
+                'circula_number' => $info['xn_sale'],           // 市场流通数量
+                'type'           => 0,                          // 交易类型1/0 (1表示可以寄售)
+                'sale_time'      => $info['startTime'],         // 预售时间
+                'sale_number'    => $info['xn_sale'],           // 发售数量
                 'create_time'    => $time
             ];
             RealtGoods::insert($insert);
