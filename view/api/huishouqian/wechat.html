@@ -1,0 +1,87 @@
+<html>
+<head>
+    <title>打开小程序</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1, maximum-scale=1">
+    <script>
+        window.onerror = e => {
+            console.error(e)
+            alert('发生错误' + e)
+        }
+        // window.location.href = "{$openlink}";
+    </script>
+    <!-- weui 样式 -->
+    <link rel="stylesheet" href="https://res.wx.qq.com/open/libs/weui/2.4.1/weui.min.css"></link>
+    <style>
+        .hidden {
+            display: none;
+        }
+
+        .full {
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 0;
+            right: 0;
+        }
+
+        .public-web-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .public-web-container p {
+            position: absolute;
+            top: 40%;
+        }
+
+        .public-web-container a {
+            position: absolute;
+            bottom: 40%;
+        }
+
+        .wechat-web-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .wechat-web-container p {
+            position: absolute;
+            top: 40%;
+        }
+
+        .wechat-web-container wx-open-launch-weapp {
+            position: absolute;
+            bottom: 40%;
+            left: 0;
+            right: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .desktop-web-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .desktop-web-container p {
+            position: absolute;
+            top: 40%;
+        }
+    </style>
+</head>
+<body>
+<div class="page full">
+    <div id="public-web-container">
+        <p class="" style="text-align: center;margin-bottom: 30px;margin-top: 30px;">正在打开 “魅特道”...</p>
+        <a id="public-web-jump-button" href="{$openlink}" class="weui-btn weui-btn_primary weui-btn_loading">
+            打开小程序进行支付
+        </a>
+    </div>
+</div>
+</body>
+</html>
