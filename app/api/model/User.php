@@ -162,8 +162,7 @@ class User extends UserModel
             ];
             //新增身份证数据
             $userIdcarInfo = UserIdcar::create($postlist);
-
-            var_dump($userIdcarInfo->idcar_id);die;
+            $user_info = Db::name('user')->where(['user_id' =>$user_id])->update(['idcar_id'=> $userIdcarInfo->idcar_id]);
 
             return ['code' => 200,'msg' => '实名认证成功'];
         }
