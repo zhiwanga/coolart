@@ -137,9 +137,8 @@ class User extends UserModel
         $accountNo = '';
         //手机号
         $user_info = \app\common\model\User::where(['user_id' =>$user_id])->find();
-
+        var_dump($user_info['mobile']);
         $mobile = $user_info['mobile'];
-        var_dump($mobile);
         $idcar = UserIdcar::where(['idcar_name' => $idcarname,'idcar' => $idcarnub])->find();
 
         if($idcar && $idcar['status'] == 0){
