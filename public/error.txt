@@ -1,0 +1,1 @@
+s:137:"SQLSTATE[22003]: Numeric value out of range: 1690 BIGINT UNSIGNED value is out of range in '(`nft4`.`yoshop_goods_sku`.`stock_num` - 24)'";
