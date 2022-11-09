@@ -163,7 +163,7 @@ class User extends UserModel
             //新增身份证数据
             $userIdcarInfo = UserIdcar::create($postlist);
 
-            var_dump($userIdcarInfo->id);die;
+            var_dump($userIdcarInfo->idcar_id);die;
 
             return ['code' => 200,'msg' => '实名认证成功'];
         }
