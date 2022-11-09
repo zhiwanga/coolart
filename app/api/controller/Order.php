@@ -34,7 +34,7 @@ use think\facade\Db;
 use think\response\Json;
 use app\api\model\User as UserModel;
 use app\common\model\Goods;
-
+use app\api\service\User as UserService;
 
 /**
  * 我的订单控制器
@@ -315,6 +315,16 @@ class Order extends Controller
         $collId=$posta['collId'];
         //获取赠送目标用户ID
         $heUserId=$posta['heuserid'];
+        
+        $second_pswd = $posta['second_pswd'];
+
+        $user_id = UserService::getCurrentLoginUserId();
+
+        $user = Db::name('user')->field('trade_pass')->where('user_id', $user_id)->find();
+
+        if($second_pswd != $user['trade_pass']) {
+            return $this->renderError('二级密码输入错误');
+        }
 
         $orderCont=$orderModel->giveGoodModel($collId,$heUserId);
         
