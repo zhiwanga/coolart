@@ -151,7 +151,7 @@ class User extends UserModel
         $idcar = $this->idcarCha($idcarnub,$idcarname,$accountNo,$mobile);
         $result_json = json_decode($idcar,true);
 
-        if(!empty($result_json) && $result_json['code'] == 0 && $result_json['data']['res'] == 1){
+        if(!empty($result_json) && $result_json['code'] == 0 && $result_json['result']['res'] == 1){
 
             $postlist = [
                 'idcar_name'    => $post['idcar_name'],
