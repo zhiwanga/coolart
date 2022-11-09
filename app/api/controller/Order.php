@@ -316,10 +316,6 @@ class Order extends Controller
         //获取赠送目标用户ID
         $heUserId=$posta['heuserid'];
         
-<<<<<<< HEAD
-=======
-        
->>>>>>> 588a41087f3b58d46fc5abbf932f282ef21891df
         $second_pswd = $posta['second_pswd'];
 
         $user_id = UserService::getCurrentLoginUserId();
@@ -329,11 +325,6 @@ class Order extends Controller
         if($second_pswd != $user['trade_pass']) {
             return $this->renderError('二级密码输入错误');
         }
-<<<<<<< HEAD
-=======
-
-        
->>>>>>> 588a41087f3b58d46fc5abbf932f282ef21891df
 
         $orderCont=$orderModel->giveGoodModel($collId,$heUserId);
         
