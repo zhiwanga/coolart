@@ -5,11 +5,12 @@
 /vendor
 .env
 /runtime
+/public/uploads
 
 # /headimg
 # static
 # /view
 # /www
 # /addons
-# /public
+
 # /h5
