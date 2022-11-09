@@ -5,10 +5,10 @@
 .env
 /runtime
 
-# /headimg
-# /static
-# /view
-# /www
-# /addons
-# /public
-# /h5
+/headimg
+static
+/view
+/www
+addons
+/public
+/h5
