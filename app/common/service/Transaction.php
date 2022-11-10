@@ -12,6 +12,7 @@ declare (strict_types=1);
 
 namespace app\common\service;
 
+use app\api\model\TransactionOrder;
 use app\common\model\Coll;
 use app\common\model\GoodsSn;
 use app\common\model\UploadFile;
@@ -146,7 +147,7 @@ class Transaction extends BaseService
             ->where('t.status',0)
             ->where('t.name','like','%'.$keyword.'%')
             ->order($order,$type)
-            ->paginate($listRows);;
+            ->paginate($listRows);
         if ($list){
             foreach ($list as &$value){
                 $value['file_path'] = $value['goods']['file']['preview_url'];
@@ -156,6 +157,24 @@ class Transaction extends BaseService
             }
         }
         return $list;
+    }
+
+    /**
+     * 二级市场点击购买生成临时订单
+     * @param [type] $param
+     * @return void
+     */
+    public function creteTempOrder($param)
+    {
+        $user_id = User::getCurrentLoginUserId();
+        $insert = [
+            'user_id'           => $user_id,
+            'goods_id'          => $param['goods_id'],
+            'transaction_id'    => $param['transaction_id'],
+            'status'            => 1,
+            'create_time'       => time()
+        ];
+        return TransactionOrder::insert($insert);
     }
 
 
