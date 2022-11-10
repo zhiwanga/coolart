@@ -148,24 +148,23 @@ class User extends UserModel
 
         if(!empty($result_json) && $result_json['code'] == 0 && $result_json['result']['res'] == 1){
             
-             if($idcar && $idcar['status'] == 0){
+            if($idcar && $idcar['status'] == 0){
 
                 $idcar->save(['status'=>1]);
-              $user_info = Db::name('user')->where(['user_id' =>$user_id])->update(['idcar_id'=> $idcar['idcar_id']]);
-             }else{
-                  $postlist = [
-                'idcar_name'    => $post['idcar_name'],
-                'idcar'         => $post['idcar'],
-                'mobile'        => $mobile,
-                'user_id'       => $user_id,
-                'status'        =>1,
-              ];
-            //新增身份证数据
-            $userIdcarInfo = UserIdcar::create($postlist);
-            $user_info = Db::name('user')->where(['user_id' =>$user_id])->update(['idcar_id'=> $userIdcarInfo->idcar_id]);
+                $user_info = Db::name('user')->where(['user_id' =>$user_id])->update(['idcar_id'=> $idcar['idcar_id']]);
+            }else{
+                $postlist = [
+                    'idcar_name'    => $post['idcar_name'],
+                    'idcar'         => $post['idcar'],
+                    'mobile'        => $mobile,
+                    'user_id'       => $user_id,
+                    'status'        =>1,
+                ];
+                //新增身份证数据
+                $userIdcarInfo = UserIdcar::create($postlist);
+                $user_info = Db::name('user')->where(['user_id' =>$user_id])->update(['idcar_id'=> $userIdcarInfo->idcar_id]);
             }
-            
-           
+
             return ['code' => 200,'msg' => '实名认证成功'];
         }
         return ['code' => 500,'msg' => '实名认证失败'];
