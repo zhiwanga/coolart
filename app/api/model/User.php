@@ -133,37 +133,39 @@ class User extends UserModel
         $idcarname = $post['idcar_name'];
         //获取身份证号码
         $idcarnub = $post['idcar'];
-        //银行卡
-        $accountNo = '';
         //手机号
-        $user_info = Db::name('user')->where(['user_id' =>$user_id])->find();
-        $mobile = $user_info['mobile'];
+         $mobile = $post['mobile'];
+        //手机号
+        //  $user_info = Db::name('user')->where(['user_id' =>$user_id])->find();
         $idcar = UserIdcar::where(['idcar_name' => $idcarname,'idcar' => $idcarnub])->find();
 
-        if($idcar && $idcar['status'] == 0){
-
-            return ['code' => 200 ,'msg' => '请继续完成实名认证'];
-
-        }
         if ($idcar && $idcar['status'] == 1){
             return ['code' => 500,'msg' => '该实名信息已存在'];
         }
-        $idcar = $this->idcarCha($idcarnub,$idcarname,$accountNo,$mobile);
-        $result_json = json_decode($idcar,true);
+        
+        $idcarResult = $this->idcarCha($idcarnub,$idcarname,$mobile);
+        $result_json = json_decode($idcarResult,true);
 
         if(!empty($result_json) && $result_json['code'] == 0 && $result_json['result']['res'] == 1){
+            
+             if($idcar && $idcar['status'] == 0){
 
-            $postlist = [
+                $idcar->save(['status'=>1]);
+              $user_info = Db::name('user')->where(['user_id' =>$user_id])->update(['idcar_id'=> $idcar['idcar_id']]);
+             }else{
+                  $postlist = [
                 'idcar_name'    => $post['idcar_name'],
                 'idcar'         => $post['idcar'],
-                'account_no'    => $accountNo,
                 'mobile'        => $mobile,
-                'user_id'       => $user_id
-            ];
+                'user_id'       => $user_id,
+                'status'        =>1,
+              ];
             //新增身份证数据
             $userIdcarInfo = UserIdcar::create($postlist);
             $user_info = Db::name('user')->where(['user_id' =>$user_id])->update(['idcar_id'=> $userIdcarInfo->idcar_id]);
-
+            }
+            
+           
             return ['code' => 200,'msg' => '实名认证成功'];
         }
         return ['code' => 500,'msg' => '实名认证失败'];
@@ -250,7 +252,7 @@ class User extends UserModel
         return curl_exec($curl);
     }
 
-    public function idcarCha($idcarnub,$idcarname,$accountNo,$mobile)
+    public function idcarCha($idcarnub,$idcarname,$mobile)
     {
         $host = "https://mobile3elements.shumaidata.com";
         $path = "/mobile/verify_real_name";
