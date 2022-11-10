@@ -472,7 +472,7 @@ class Order extends Controller
             }
         }else{
             if($res['user_id'] == $user_id) {
-                return $this->renderSuccess([], '尽快购买');
+                return $this->renderSuccess([], '尽快购买！');
             }else{
                 return $this->renderSuccess([], '商品已被占用！');
             }

@@ -20,6 +20,7 @@ class TransacOrder extends Command
     protected function execute(Input $input, Output $output)
     {
         $time  = time()-300;
-        TransactionOrder::where('create_time' < $time)->where('status', 1)->update(['status'=> 3]);
+        $res = TransactionOrder::where('create_time' < $time)->where('status', 1)->update(['status'=> 3]);
+        echo $res;
     }
 }
