@@ -579,9 +579,12 @@ class Order extends Controller
             $data['requestNum'] = 'JD' . $orderNo;
             $data['amount'] = $transaction['price'];
             $seOrder = OrderModel::field('order_id, order_no, pay_price')->where('transaction_id', $transactionId)->find();
-            // 查到订单了就是二级市场转卖的商品
+            // 二级市场转卖的商品
             if($seOrder) {
                 OrderModel::where('order_id', $seOrder['order_id'])->update(['order_status' => 30]);
+
+                // 修改临时订单为已购买
+                TransactionOrder::where('transaction_id', $transactionId)->where('user_id', $user_id)->update(['status' => 2]);
             }
             //填充需要的数据
             $goodsarr = [
@@ -641,6 +644,8 @@ class Order extends Controller
                     // 获取订单详情
                     $model = $orderModel->getUserOrderDetail(intval($arrList['order_id']));
                 }
+
+                
                 // 余额支付
                 if(!$orderModel->onPaymentByBalance($model['order_no'])){
 

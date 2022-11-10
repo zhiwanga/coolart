@@ -154,6 +154,10 @@ class Transaction extends BaseService
                 $value['get_total'] = $value['goodsinfo']['xn_sale'];
                 $value['number']    = $value['goodssn']['number'];
                 unset($value['goods']);unset($value['goodssn']);
+                // 查看商品是否占用
+                $value['occupy'] = 0;
+                $res = Db::name('transaction_order')->where('status', 1)->where('transaction_id', $value['id'])->find();
+                if($res) $value['occupy'] = 1;
             }
         }
         return $list;
