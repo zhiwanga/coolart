@@ -9,6 +9,7 @@ return [
         'timer' => \app\console\command\Timer::class,
         'app\command\Nft',
         'app\command\AddWallet',
-        'app\command\GoodsAdd'
+        'app\command\GoodsAdd',
+        'app\command\TransacOrder'
     ],
 ];

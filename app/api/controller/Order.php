@@ -15,6 +15,7 @@ namespace app\api\controller;
 use app\api\model\Coll;
 use app\api\model\Order as OrderModel;
 use app\api\model\Setting as SettingModel;
+use app\api\model\TransactionOrder;
 use app\api\model\UserBank;
 use app\common\library\H5pay as Sd;
 use app\common\library\helper;
@@ -444,6 +445,38 @@ class Order extends Controller
         $transaction = new Transaction();
         $list = $transaction->list($this->request->param());
         return $this->renderSuccess(compact('list'));
+    }
+
+    /**
+     * 二级市场购买创建临时订单
+     * @return void
+     */
+    public function addcretetemporder()
+    {
+        $param = $this->request->param();
+        $user_id = User::getCurrentLoginUserId();
+
+        if(!isset($param['transaction_id']) || !isset($param['goods_id'])) return $this->renderError('缺少传参');
+        // 判断是否正在有人占用
+        $res = TransactionOrder::where('transaction_id', $param['transaction_id'])->where('status', 1)->find();
+
+        if(!$res) {
+            // 检查此人今天占用订单数不超过三个
+            $daysum = TransactionOrder::where('user_id', $user_id)->whereDay('create_time')->where('status', '<>', 2)->count();
+            if($daysum >= 3) {
+                return $this->renderError('当天购买次数受限');
+            }else{
+                $transaction = new Transaction();
+                $transaction->creteTempOrder($param);
+                return $this->renderSuccess([], '临时订单创建成功！');
+            }
+        }else{
+            if($res['user_id'] == $user_id) {
+                return $this->renderSuccess([], '尽快购买');
+            }else{
+                return $this->renderSuccess([], '商品已被占用！');
+            }
+        }
     }
 
     /**
