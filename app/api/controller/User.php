@@ -440,12 +440,10 @@ class User extends Controller
 
         $user = UserService::getCurrentLoginUser();
 
-         // 验证短信验证码是否匹配
+        // 验证短信验证码是否匹配
         //  if (!CaptchaApi::checkSms($posta['smsCode'],$user['mobile'])) {
         //     throwError('短信验证码不正确');
         //  }
-
-       
 
         // rsa密钥检测
         if(isset($posta['cipcont']) && $posta['cipcont']) {
