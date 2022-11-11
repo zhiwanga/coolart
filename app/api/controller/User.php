@@ -449,6 +449,8 @@ class User extends Controller
         if(isset($posta['cipcont']) && $posta['cipcont']) {
             $res = Rsa::rsaContCheck($posta['cipcont'], $user);
             if(!$res) return $this->renderError('密码错误');
+        }else{
+            return $this->renderError('缺少传参');
         }
         
          if($second_pswd != $user['trade_pass']) {
