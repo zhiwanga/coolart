@@ -85,21 +85,32 @@ class Rsa
 
     /**
      * rsa密钥验证
-     * @param [type] $str
-     * @return void
+     *
+     * @param integer $type 1:收款编辑
+     * @param [type] $str rsa 加密字符串
+     * @param [type] $user_id
+     * @return bool
      */
-    public static function rsaContCheck($str, $rypt)
+    public static function rsaContCheck($type = 0, $str = '', $user_id = 0)
     {
         $rsacont = self::privDecrypt($str);
-
-        if($user) {
-            $pswd = substr($rsacont, 0, strlen($rsacont)-10);
-            if(!password_verify($pswd, $rypt)){
-                return false;
-            }
-        }else{
+        $user = Db::name('user')->where('id', $user_id)->find();
+        if(!$user) {
             return false;
+        }else{
+            $result = true;
+            switch ($type) {
+                case 1: // 收款编辑
+                    $pswd = substr($rsacont, 0, strlen($rsacont)-10);
+                    if(!password_verify($pswd, $user['password'])){
+                        $result = false;
+                    }
+                    break;
+                default:
+                    return false;
+                    break;
+            }
         }
-        return true;
+        return $result;
     }
 }
