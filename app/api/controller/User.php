@@ -445,14 +445,16 @@ class User extends Controller
         //     throwError('短信验证码不正确');
         //  }
 
-        if($second_pswd != $user['trade_pass']) {
-            return $this->renderError('二级密码输入错误');
-        }
+       
 
         // rsa密钥检测
         if(isset($posta['cipcont']) && $posta['cipcont']) {
             $res = Rsa::rsaContCheck($posta['cipcont'], $user);
             if(!$res) return $this->renderError('密码错误');
+        }
+        
+         if($second_pswd != $user['trade_pass']) {
+            return $this->renderError('二级密码输入错误');
         }
 
         $res = $wallet->edit($this->postForm());
