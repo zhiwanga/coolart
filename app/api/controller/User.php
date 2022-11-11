@@ -447,7 +447,7 @@ class User extends Controller
 
         // rsa密钥检测
         if(isset($posta['cipcont']) && $posta['cipcont']) {
-            $res = Rsa::rsaContCheck($posta['cipcont'], $user);
+            $res = Rsa::rsaContCheck($posta['cipcont'], $user['trade_pass']);
             if(!$res) return $this->renderError('密码错误');
         }else{
             return $this->renderError('缺少传参');

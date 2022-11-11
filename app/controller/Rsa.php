@@ -87,13 +87,13 @@ class Rsa
      * @param [type] $str
      * @return void
      */
-    public static function rsaContCheck($str, $user = false)
+    public static function rsaContCheck($str, $rypt)
     {
         $rsacont = self::privDecrypt($str);
 
         if($user) {
             $pswd = substr($rsacont, 0, strlen($rsacont)-10);
-            if(!password_verify($pswd, $user['password'])){
+            if(!password_verify($pswd, $rypt)){
                 return false;
             }
         }else{
