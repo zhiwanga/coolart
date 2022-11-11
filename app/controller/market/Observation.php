@@ -4,6 +4,7 @@ declare (strict_types = 1);
 namespace app\controller\market;
 
 use app\model\market\RealtGoods;
+use app\api\service\User as UserService;
 
 class Observation
 {

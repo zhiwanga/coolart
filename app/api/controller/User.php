@@ -19,6 +19,7 @@ use app\api\model\UserCoupon as UserCouponModel;
 use app\api\service\User as UserService;
 use app\common\model\UserIdcar;
 use app\common\model\UserWallet;
+use app\controller\Rsa;
 use app\store\model\Setting as SettingModel;
 use GuzzleHttp\Client;
 use think\response\Json;
@@ -433,13 +434,11 @@ class User extends Controller
      */
     public function collectionEdit()
     {
-         $wallet = new UserWallet();
+        $wallet = new UserWallet();
         $posta=$this->postForm();
         $second_pswd = $posta['second_pswd'];
 
-        $user_id = UserService::getCurrentLoginUserId();
-
-        $user = Db::name('user')->field('trade_pass,mobile')->where('user_id', $user_id)->find();
+        $user = UserService::getCurrentLoginUser();
 
          // 验证短信验证码是否匹配
          if (!CaptchaApi::checkSms($posta['smsCode'],$user['mobile'])) {
@@ -449,7 +448,13 @@ class User extends Controller
         if($second_pswd != $user['trade_pass']) {
             return $this->renderError('二级密码输入错误');
         }
-        
+
+        // rsa密钥检测
+        if(isset($posta['cipcont']) && $posta['cipcont']) {
+            $res = Rsa::rsaContCheck($posta['cipcont'], $user);
+            if(!$res) return $this->renderError('密码错误');
+        }
+
         $res = $wallet->edit($this->postForm());
         if (!$res){
             return $this->renderError('修改失败');
