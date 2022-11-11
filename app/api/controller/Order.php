@@ -461,22 +461,90 @@ class Order extends Controller
         $user_id = User::getCurrentLoginUserId();
 
         if(!isset($param['transaction_id']) || !isset($param['goods_id'])) return $this->renderError('缺少传参');
-        // 判断是否正在有人占用
-        $res = TransactionOrder::where('transaction_id', $param['transaction_id'])->where('status', 1)->find();
+        // 判断是否正在有人占用（查找未付款的订单）
+        $res = OrderModel::where('transaction_id', $param['transaction_id'])->where('order_status', 10)->find();
 
         if(!$res) {
-            // 检查此人今天占用订单数不超过三个
-            $daysum = TransactionOrder::where('user_id', $user_id)->whereDay('create_time')->where('status', '<>', 2)->count();
+            // 检查此人取消订单数不超过三个
+            $daysum = OrderModel::where('user_id', $user_id)->where('type', 1)->whereDay('create_time')->where('is_delete', 1)->count();
             if($daysum >= 3) {
                 return $this->renderError('当天购买次数受限');
             }else{
-                $transaction = new Transaction();
-                $transaction->creteTempOrder($param);
-                return $this->renderSuccess([], '临时订单创建成功！');
+                $daysum = OrderModel::where('user_id', $user_id)->where('type', 1)->whereDay('create_time')->where('order_status', 10)->count();
+                if($daysum >= 3) {
+                    return $this->renderError('当天购买次数受限，请尽快购买待支付订单');
+                }else{
+                    $orderModel = new OrderModel();
+                    $orderNo = $orderModel->orderNo();
+                    Db::startTrans();
+                    try {
+                        $transaction = TransactionModel::where('id', $param['transaction_id'])->lock(true)->find();
+                        if (empty($transaction) || $transaction['status'] != 0){
+                            return $this->renderError('藏品不存在或已下架！');
+                        }
+                        $data = jdConfig();
+                        $data['requestNum'] = 'JD' . $orderNo;
+                        $data['amount'] = $transaction['price'];
+
+                        //填充需要的数据
+                        $goodsarr = [
+                            'total_price' => $transaction['price'],
+                            'order_price' => $transaction['price'],
+                            'pay_price' => $transaction['price'],
+                            'pay_status' => 10,//默认为未付款
+                            'order_status' => 10,//默认为进行中
+                            'user_id' => $user_id,
+                            'store_id' => 10001,
+                            'create_time' => time(),
+                            'goods_id' => $transaction['goods_id'],
+                            'goods_sum' => 1,
+                            'order_no' => $data['requestNum'],
+                            'points_bonus' => 0, //赠送的积分数量
+                            'is_box' => 0,
+                            'type' => 1,   // 二级市场购买
+                            'transaction_id' => $transaction['id'],   //交易id
+                        ];
+                        $arrList = OrderModel::create($goodsarr); //创建订单
+
+                        //根据商品id获取商品信息
+                        $goodsList = Db::name('goods')
+                            ->alias('g')
+                            ->join('yoshop_goods_image gi', 'g.goods_id=gi.goods_id')
+                            ->where('g.goods_id', $transaction['goods_id'])
+                            ->find();
+                        //将数据插入到商品和订单的关系表中
+                        $orderGoods = [
+                            'goods_id' => $goodsList['goods_id'],
+                            'goods_name' => $goodsList['goods_name'],
+                            'image_id' => $goodsList['image_id'],
+                            'deduct_stock_type' => 10,
+                            'spec_type' => 10,
+                            'goods_sku_id' => 0,
+                            'content' => $goodsList['content'],
+                            'goods_price' => $goodsList['goods_price_max'],
+                            'total_num' => 1,
+                            'total_price' => $goodsList['goods_price_max'],
+                            'total_pay_price' => $goodsList['goods_price_max'],
+                            'order_id' => $arrList['order_id'],
+                            'user_id' => $user_id,
+                            'create_time' => time()
+                        ];
+                        //将数据填充到商品订单关系表中
+                        Db::name('order_goods')
+                            ->insert($orderGoods);
+
+                        Db::commit();
+                        return $this->renderSuccess([], '临时订单创建成功！');
+                    } catch (\Exception $e) {
+                        // 回滚事务
+                        Db::rollback();
+                        return $this->renderError($e->getMessage());
+                    }
+                }
             }
         }else{
             if($res['user_id'] == $user_id) {
-                return $this->renderSuccess([], '尽快购买！');
+                return $this->renderSuccess([], '请尽快前往待支付订单购买！');
             }else{
                 return $this->renderSuccess([], '商品已被占用！');
             }
@@ -593,8 +661,8 @@ class Order extends Controller
             if($seOrder) {
                 OrderModel::where('order_id', $seOrder['order_id'])->update(['order_status' => 30]);
 
-                // 修改临时订单为已购买
-                TransactionOrder::where('transaction_id', $transactionId)->where('user_id', $user_id)->update(['status' => 2]);
+                // 修改临时订单为已购买（2022/11/11 废弃）
+                // TransactionOrder::where('transaction_id', $transactionId)->where('user_id', $user_id)->update(['status' => 2]);
             }
             //填充需要的数据
             $goodsarr = [
@@ -612,7 +680,7 @@ class Order extends Controller
                 'points_bonus' => 0, //赠送的积分数量
                 'is_box' => 0,
                 'pay_type' => 20,   //京东付款
-                'type' => 1,   //京东付款
+                'type' => 1,   // 二级市场购买
                 'transaction_id' => $transaction['id'],   //交易id
             ];
             $arrList = OrderModel::create($goodsarr); //创建订单
@@ -686,9 +754,7 @@ class Order extends Controller
             // 回滚事务
             Db::rollback();
             return $this->renderError($e->getMessage());
-
         }
-
     }
 
     /**

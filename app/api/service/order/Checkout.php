@@ -1354,14 +1354,16 @@ class Checkout extends BaseService
             $is_delete = 0;
 
         }
-
-        // 我的转卖订单列表
         $type = [];
-        if(isset($orderType['type']) && $orderType['type']) {
-            if(1 == $orderType['type']) {
-                $type['type'] = 0;
-            }else{
-                $type['type'] = 1;
+        // 待付款显示二级市场和一级市场所有订单
+        if($orderType['order_status'] != 10) {
+            // 我的转卖订单列表
+            if(isset($orderType['type']) && $orderType['type']) {
+                if(1 == $orderType['type']) {
+                    $type['type'] = 0;
+                }else{
+                    $type['type'] = 1;
+                }
             }
         }
 
