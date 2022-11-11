@@ -94,7 +94,7 @@ class Rsa
     public static function rsaContCheck($type = 0, $str = '', $user_id = 0)
     {
         $rsacont = self::privDecrypt($str);
-        $user = Db::name('user')->where('id', $user_id)->find();
+        $user = Db::name('user')->where('user_id', $user_id)->find();
         if(!$user) {
             return false;
         }else{
