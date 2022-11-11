@@ -2,10 +2,10 @@
 
 namespace app\command;
 
-use app\api\model\TransactionOrder;
 use think\console\Command;
 use think\console\Input;
 use think\console\Output;
+use app\api\model\Order as OrderModel;
 
 class TransacOrder extends Command
 {
@@ -19,9 +19,8 @@ class TransacOrder extends Command
 
     protected function execute(Input $input, Output $output)
     {
-
         $time  = time()-300;
-        $res = TransactionOrder::where('create_time', '<', $time)->where('status', 1)->update(['status'=> 3]);
+        $res = OrderModel::where('create_time', '<', $time)->where('order_status', 10)->where('type', 1)->update(['is_delete'=> 1, 'order_status' => 20]);
         echo '更新数据：'. $res;
     }
 }

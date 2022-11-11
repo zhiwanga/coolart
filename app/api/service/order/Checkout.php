@@ -1339,10 +1339,8 @@ class Checkout extends BaseService
                     break;
                 case 20:
                     $status['o.pay_status'] = 10;
-                        break;
-
+                    break;
             }
-
         }
 
         if(isset($orderType['is_delete']) && $orderType['is_delete'] > 0){
@@ -1356,7 +1354,7 @@ class Checkout extends BaseService
         }
         $type = [];
         // 待付款显示二级市场和一级市场所有订单
-        if($orderType['order_status'] != 10) {
+        if(isset($orderType['order_status']) && ($orderType['order_status'] != 10)) {
             // 我的转卖订单列表
             if(isset($orderType['type']) && $orderType['type']) {
                 if(1 == $orderType['type']) {
