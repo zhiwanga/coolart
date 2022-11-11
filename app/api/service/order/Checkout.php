@@ -1365,19 +1365,31 @@ class Checkout extends BaseService
             }
         }
 
-        //$status = empty($orderType['order_status']) ? [] : ['o.order_status' => $orderType['order_status']];
-        $orderList = DB::name('order')
-            ->distinct(true)
-            ->alias('o')
-            ->leftJoin('yoshop_order_goods yog', 'o.order_id=yog.order_id')
-            ->leftJoin('yoshop_upload_file yuf', 'yog.image_id=yuf.file_id')
-            ->field('o.order_id,o.order_no,o.goods_id as g_id,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
-            ->where('o.user_id', $userId)
-            ->where('o.is_delete','=',$is_delete)
-            ->where($status)
-            ->where($type)
-            ->order('o.create_time', 'desc')
-            ->paginate($listRows)->toArray();
+        // 无条件全部订单
+        if(isset($orderType['order_status']) && ($orderType['order_status'] == '')) {
+            $orderList = DB::name('order')
+                    ->distinct(true)
+                    ->alias('o')
+                    ->leftJoin('yoshop_order_goods yog', 'o.order_id=yog.order_id')
+                    ->leftJoin('yoshop_upload_file yuf', 'yog.image_id=yuf.file_id')
+                    ->field('o.order_id,o.order_no,o.goods_id as g_id,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
+                    ->where('o.user_id', $userId)
+                    ->order('o.create_time', 'desc')
+                    ->paginate($listRows)->toArray();
+        }else{
+            $orderList = DB::name('order')
+                    ->distinct(true)
+                    ->alias('o')
+                    ->leftJoin('yoshop_order_goods yog', 'o.order_id=yog.order_id')
+                    ->leftJoin('yoshop_upload_file yuf', 'yog.image_id=yuf.file_id')
+                    ->field('o.order_id,o.order_no,o.goods_id as g_id,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
+                    ->where('o.user_id', $userId)
+                    ->where('o.is_delete','=',$is_delete)
+                    ->where($status)
+                    ->where($type)
+                    ->order('o.create_time', 'desc')
+                    ->paginate($listRows)->toArray();
+        }
 
         $not_cofig = \app\store\model\Setting::getItem('box',10001)['price'];
 
