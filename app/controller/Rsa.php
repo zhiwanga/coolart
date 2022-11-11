@@ -74,7 +74,7 @@ class Rsa
      * 公钥解密     
      * @param string $encrypted     
      * @return null     
-     */   
+     */
     public static function publicDecrypt($encrypted = '')    
     {        
         if (!is_string($encrypted)) {            
@@ -94,23 +94,28 @@ class Rsa
     public static function rsaContCheck($type = 0, $str = '', $user_id = 0)
     {
         $rsacont = self::privDecrypt($str);
-        $user = Db::name('user')->where('user_id', $user_id)->find();
-        if(!$user) {
+        if(!$rsacont) {
             return false;
         }else{
-            $result = true;
-            switch ($type) {
-                case 1: // 收款编辑
-                    $pswd = substr($rsacont, 0, strlen($rsacont)-10);
-                    if(!password_verify($pswd, $user['password'])){
-                        $result = false;
-                    }
-                    break;
-                default:
-                    return false;
-                    break;
+            $user = Db::name('user')->where('user_id', $user_id)->find();
+            if(!$user) {
+                return false;
+            }else{
+                $result = true;
+                switch ($type) {
+                    case 1: // 收款编辑
+                        $pswd = substr($rsacont, 0, strlen($rsacont)-10);
+                        if(!password_verify($pswd, $user['password'])){
+                            $result = false;
+                        }
+                        break;
+                    default:
+                        return false;
+                        break;
+                }
             }
         }
+
         return $result;
     }
 }

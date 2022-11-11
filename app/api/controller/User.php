@@ -452,7 +452,7 @@ class User extends Controller
         }else{
             return $this->renderError('缺少传参');
         }
-        
+
          if($second_pswd != $user['trade_pass']) {
             return $this->renderError('二级密码输入错误');
         }
