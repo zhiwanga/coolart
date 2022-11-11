@@ -47,7 +47,7 @@ class User extends Controller
         $userInfo['grade'];
         return $this->renderSuccess(compact('userInfo'));
     }
-    
+
     /**
      * 设置支付密码
      * @return Json
@@ -441,9 +441,9 @@ class User extends Controller
         $user = UserService::getCurrentLoginUser();
 
          // 验证短信验证码是否匹配
-         if (!CaptchaApi::checkSms($posta['smsCode'],$user['mobile'])) {
-            throwError('短信验证码不正确');
-         }
+        //  if (!CaptchaApi::checkSms($posta['smsCode'],$user['mobile'])) {
+        //     throwError('短信验证码不正确');
+        //  }
 
         if($second_pswd != $user['trade_pass']) {
             return $this->renderError('二级密码输入错误');
