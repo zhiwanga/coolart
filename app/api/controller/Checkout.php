@@ -42,6 +42,7 @@ use think\validate\ValidateRule;
 use think\facade\Db;
 use Yansongda\Pay\Log;
 use app\api\model\Setting;
+use app\controller\Rsa;
 use app\model\market\RealtGoods;
 
 /**
@@ -572,6 +573,15 @@ class Checkout extends Controller
         $pay_type = $this->request->param('pay_type','');
 
         $order_sn = $this->request->param('order_no','');
+        $cipcont = $this->request->param('cipcont','');
+
+        // rsa密钥检测
+        if(isset($cipcont) && $cipcont) {
+            $res = Rsa::rsaContCheck(6, $cipcont, $user['user_id']);
+            if(!$res) return $this->renderError('密码错误');
+        }else{
+            return $this->renderError('缺少传参');
+        }
 
         $result = $this->validate([
             'goodsId'   => $goodsId,

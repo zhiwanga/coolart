@@ -21,6 +21,7 @@ use app\api\service\User;
 use app\common\model\Order as OrderModel;
 use app\common\model\OrderGoods;
 use app\common\model\Transaction as TransactionModel;
+use app\controller\Rsa;
 use think\facade\Db;
 
 /**
@@ -39,15 +40,22 @@ class Transaction extends BaseService
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function sale($collId,$price)
+    public function sale($collId,$price, $cipcont)
     {
         $user_id = User::getCurrentLoginUserId();
         $coll = Coll::where(['coll_id' => $collId,'user_id' => $user_id,'status' => 0])->find();
         if (empty($coll)){
             return false;
         }
-//        $order = OrderModel::where('order_no',$coll['order_no'])->find();
-//        $values = Setting::getItem('box');
+
+        // rsa密钥检测
+        if(isset($cipcont) && $cipcont) {
+            $res = Rsa::rsaContCheck(5, $cipcont, $user_id);
+            if(!$res) return false;
+        }else{
+            return false;
+        }
+
         $log = [
             'user_id' => $user_id,
             'coll_id' => $collId,

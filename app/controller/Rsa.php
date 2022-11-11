@@ -119,6 +119,26 @@ class Rsa
                             $result = false;
                         }
                         break;
+                    case 4: // 转增
+                        if($pswd != $user['trade_pass']){
+                            $result = false;
+                        }
+                        break;
+                    case 5: // 二级市场上架
+                        if($pswd != $user['trade_pass']){
+                            $result = false;
+                        }
+                        break;
+                    case 6: // 一级市场购买
+                        if($pswd != $user['trade_pass']){
+                            $result = false;
+                        }
+                        break;
+                    case 7: // 二级市场购买
+                        if($pswd != $user['trade_pass']){
+                            $result = false;
+                        }
+                        break;
                     default:
                         return false;
                         break;

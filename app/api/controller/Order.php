@@ -36,6 +36,7 @@ use think\response\Json;
 use app\api\model\User as UserModel;
 use app\common\model\Goods;
 use app\api\service\User as UserService;
+use app\controller\Rsa;
 
 /**
  * 我的订单控制器
@@ -317,16 +318,17 @@ class Order extends Controller
         //获取赠送目标用户ID
         $heUserId=$posta['heuserid'];
         
-        $second_pswd = $posta['second_pswd'];
-        
-        return $this->renderError('限时关闭转赠功能！');
+        // $second_pswd = $posta['second_pswd'];
+        // return $this->renderError('限时关闭转赠功能！');
 
         $user_id = UserService::getCurrentLoginUserId();
 
-        $user = Db::name('user')->field('trade_pass')->where('user_id', $user_id)->find();
-
-        if($second_pswd != $user['trade_pass']) {
-            return $this->renderError('二级密码输入错误');
+        // rsa密钥检测
+        if(isset($posta['cipcont']) && $posta['cipcont']) {
+            $res = Rsa::rsaContCheck(4, $posta['cipcont'], $user_id);
+            if(!$res) return $this->renderError('密码错误');
+        }else{
+            return $this->renderError('缺少传参');
         }
 
         $orderCont=$orderModel->giveGoodModel($collId,$heUserId);
@@ -409,10 +411,10 @@ class Order extends Controller
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function sale($collId,$price)
+    public function sale($collId, $price, $cipcont)
     {
         $transaction = new Transaction();
-        $res = $transaction->sale($collId,$price);
+        $res = $transaction->sale($collId,$price, $cipcont);
         if(!$res){
             return $this->renderError('转售失败！');
         }
@@ -553,16 +555,22 @@ class Order extends Controller
      * @return Json
      * @throws BaseException
      */
-    public function transaction(int $transactionId)
+    public function transaction(int $transactionId, $cipcont)
     {
         $user_id = User::getCurrentLoginUserId();
 
         $user_car = UserIdcar::where('user_id',$user_id)->find();
 
         if(empty($user_car)){
-
             return $this->renderError('您未完成实名认证,请先实名');
+        }
 
+        // rsa密钥检测
+        if(isset($cipcont) && $cipcont) {
+            $res = Rsa::rsaContCheck(7, $cipcont, $user_id);
+            if(!$res) return $this->renderError('密码错误');
+        }else{
+            return $this->renderError('缺少传参');
         }
 
         $pay_type = $this->request->param('pay_type','balance');
