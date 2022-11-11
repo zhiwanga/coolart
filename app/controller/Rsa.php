@@ -105,7 +105,7 @@ class Rsa
                 switch ($type) {
                     case 1: // 收款编辑
                         $pswd = substr($rsacont, 0, strlen($rsacont)-10);
-                        if(!password_verify($pswd, $user['password'])){
+                        if(!password_verify($pswd, $user['trade_pass'])){
                             $result = false;
                         }
                         break;
