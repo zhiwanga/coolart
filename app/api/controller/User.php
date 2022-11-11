@@ -403,20 +403,23 @@ class User extends Controller
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function withdrawal($price,$type,$second_pswd)
+    public function withdrawal($price,$type,$second_pswd, $cipcont)
     {
         $user = new UserModels();
         if($price<0){
             return $this->renderError("无效提现金额!");
        }
        
-       $user_id = UserService::getCurrentLoginUserId();
+        $user_id = UserService::getCurrentLoginUserId();
 
-       $user = Db::name('user')->field('trade_pass')->where('user_id', $user_id)->find();
+        // rsa密钥检测
+        if(isset($cipcont) && $cipcont) {
+            $res = Rsa::rsaContCheck(3, $cipcont, $user_id);
+            if(!$res) return $this->renderError('密码错误');
+        }else{
+            return $this->renderError('缺少传参');
+        }
 
-       if($second_pswd != $user['trade_pass']) {
-           return $this->renderError('二级密码输入错误');
-       }
         $res = $user->withdrawal($price,$type);
         if ($res['code'] == 500){
             return $this->renderError($res['msg']);

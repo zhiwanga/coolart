@@ -102,10 +102,19 @@ class Rsa
                 return false;
             }else{
                 $result = true;
+                $pswd = substr($rsacont, 0, strlen($rsacont)-10);
                 switch ($type) {
                     case 1: // 收款编辑
-                        $pswd = substr($rsacont, 0, strlen($rsacont)-10);
-                        
+                        if($pswd != $user['trade_pass']){
+                            $result = false;
+                        }
+                        break;
+                    case 2: // 登录
+                        if(md5($pswd) != $user['user_pass']){
+                            $result = false;
+                        }
+                        break;
+                    case 3: // 提现
                         if($pswd != $user['trade_pass']){
                             $result = false;
                         }

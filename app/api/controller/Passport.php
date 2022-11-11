@@ -19,6 +19,8 @@ use think\cache\driver\Redis;
 use think\facade\Cache;
 use yiovo\captcha\facade\CaptchaApi;
 use app\api\model\User;
+use app\controller\Rsa;
+
 /**
  * 用户认证模块
  * Class Passport
@@ -124,6 +126,14 @@ class Passport extends Controller
 
         if($userInfo == false){
             return $this->renderError('账号或密码不正确，请重新输入！');
+        }
+
+        // rsa密钥检测
+        if(isset($posta['cipcont']) && $posta['cipcont']) {
+            $res = Rsa::rsaContCheck(2, $posta['cipcont'], $userInfo['user_id']);
+            if(!$res) return $this->renderError('密码错误');
+        }else{
+            return $this->renderError('缺少传参');
         }
 
         $token = $LoginService->getToken((int)$userInfo['user_id']);
