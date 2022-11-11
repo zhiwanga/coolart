@@ -462,7 +462,7 @@ class Order extends Controller
 
         if(!isset($param['transaction_id']) || !isset($param['goods_id'])) return $this->renderError('缺少传参');
         // 判断是否正在有人占用（查找未付款的订单）
-        $res = OrderModel::where('transaction_id', $param['transaction_id'])->where('order_status', 10)->find();
+        $res = OrderModel::where('transaction_id', $param['transaction_id'])->where('order_status', 10)->where('is_delete', 0)->find();
 
         if(!$res) {
             // 检查此人取消订单数不超过三个
