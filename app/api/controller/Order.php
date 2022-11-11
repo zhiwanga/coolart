@@ -318,6 +318,8 @@ class Order extends Controller
         $heUserId=$posta['heuserid'];
         
         $second_pswd = $posta['second_pswd'];
+        
+        return $this->renderError('限时关闭转赠功能！');
 
         $user_id = UserService::getCurrentLoginUserId();
 

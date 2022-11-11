@@ -113,6 +113,11 @@ class Passport extends Controller
         //获取手机号码
         $phone=$posta['phone'];
         $pass=$posta['password'];
+        
+        // 验证短信验证码是否匹配
+         if (!CaptchaApi::checkSms($posta['smsCode'],$phone)) {
+               return $this->renderError('短信验证码不正确！');
+         }
 
         //传值进行验证
         $userInfo = $LoginService->loginas($phone,$pass);

@@ -23,7 +23,7 @@ use app\store\model\Setting as SettingModel;
 use GuzzleHttp\Client;
 use think\response\Json;
 use think\facade\Db;
-
+use yiovo\captcha\facade\CaptchaApi;
 /**
  * 用户管理
  * Class User
@@ -402,9 +402,20 @@ class User extends Controller
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function withdrawal($price,$type)
+    public function withdrawal($price,$type,$second_pswd)
     {
         $user = new UserModels();
+        if($price<0){
+            return $this->renderError("无效提现金额!");
+       }
+       
+       $user_id = UserService::getCurrentLoginUserId();
+
+       $user = Db::name('user')->field('trade_pass')->where('user_id', $user_id)->find();
+
+       if($second_pswd != $user['trade_pass']) {
+           return $this->renderError('二级密码输入错误');
+       }
         $res = $user->withdrawal($price,$type);
         if ($res['code'] == 500){
             return $this->renderError($res['msg']);
@@ -422,7 +433,23 @@ class User extends Controller
      */
     public function collectionEdit()
     {
-        $wallet = new UserWallet();
+         $wallet = new UserWallet();
+        $posta=$this->postForm();
+        $second_pswd = $posta['second_pswd'];
+
+        $user_id = UserService::getCurrentLoginUserId();
+
+        $user = Db::name('user')->field('trade_pass,mobile')->where('user_id', $user_id)->find();
+
+         // 验证短信验证码是否匹配
+         if (!CaptchaApi::checkSms($posta['smsCode'],$user['mobile'])) {
+            throwError('短信验证码不正确');
+         }
+
+        if($second_pswd != $user['trade_pass']) {
+            return $this->renderError('二级密码输入错误');
+        }
+        
         $res = $wallet->edit($this->postForm());
         if (!$res){
             return $this->renderError('修改失败');
