@@ -11,4 +11,4 @@ Route::get('market/staringlist', 'market.StaringChain/list');  // 获取藏品�
 Route::get('market/staringdata', 'market.StaringChain/data');  // 大盘数据接入
 Route::get('market/jwttoken', 'PhpJwt/jwttoken');              // 获取token
 
-// Route::get('market/test', 'market.Observation/test');
+Route::get('market/test', 'market.Observation/test');
