@@ -164,7 +164,7 @@ class Transaction extends BaseService
                 unset($value['goods']);unset($value['goodssn']);
                 // 查看商品是否占用
                 $value['occupy'] = 0;
-                $res = Db::name('transaction_order')->where('status', 1)->where('transaction_id', $value['id'])->find();
+                $res = Db::name('order')->where('order_status', 10)->where('type', 1)->where('transaction_id', $value['id'])->find();
                 if($res) $value['occupy'] = 1;
             }
         }

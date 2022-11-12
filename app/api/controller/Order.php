@@ -482,6 +482,9 @@ class Order extends Controller
                         if (empty($transaction) || $transaction['status'] != 0){
                             return $this->renderError('藏品不存在或已下架！');
                         }
+                        if ($user_id == $transaction['user_id']){
+                            return $this->renderError('不能购买自己上架的藏品！');
+                        }
                         $data = jdConfig();
                         $data['requestNum'] = 'JD' . $orderNo;
                         $data['amount'] = $transaction['price'];
