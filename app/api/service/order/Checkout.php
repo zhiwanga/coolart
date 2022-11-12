@@ -1366,12 +1366,11 @@ class Checkout extends BaseService
                     ->alias('o')
                     ->leftJoin('yoshop_order_goods yog', 'o.order_id=yog.order_id')
                     ->leftJoin('yoshop_upload_file yuf', 'yog.image_id=yuf.file_id')
-                    ->leftJoin('yoshop_coll coll', 'coll.order_no = o.order_no')
-                    ->leftJoin('yoshop_transaction_log co', 'co.id = o.transaction_id')
-                    ->leftJoin('yoshop_goods_sn sn', 'sn.coll_id = co.coll_id')
-                    ->leftJoin('yoshop_goods_sn snn', 'snn.coll_id = coll.coll_id')
+                    // ->leftJoin('yoshop_coll coll', 'coll.order_no = o.order_no')
+                    // ->leftJoin('yoshop_transaction_log co', 'co.id = o.transaction_id')
+                    // ->leftJoin('yoshop_goods_sn sn', 'sn.coll_id = co.coll_id')
                     ->leftJoin('yoshop_goods go', 'go.goods_id = o.goods_id')
-                    ->field('o.order_id,o.order_no,o.goods_id as g_id,go.xn_sale,sn.number,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
+                    ->field('o.order_id,o.order_no,o.goods_id as g_id,go.xn_sale,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
                     ->where('o.user_id', $userId)
                     ->order('o.create_time', 'desc')
                     ->paginate($listRows)->toArray();
@@ -1381,12 +1380,11 @@ class Checkout extends BaseService
                     ->alias('o')
                     ->leftJoin('yoshop_order_goods yog', 'o.order_id=yog.order_id')
                     ->leftJoin('yoshop_upload_file yuf', 'yog.image_id=yuf.file_id')
-                    ->leftJoin('yoshop_coll coll', 'coll.order_no = o.order_no')
-                    ->leftJoin('yoshop_transaction_log co', 'co.id = o.transaction_id')
-                    ->leftJoin('yoshop_goods_sn sn', 'sn.coll_id = co.coll_id')
-                    ->leftJoin('yoshop_goods_sn snn', 'snn.coll_id = coll.coll_id')
+                    // ->leftJoin('yoshop_coll coll', 'coll.order_no = o.order_no')
+                    // ->leftJoin('yoshop_transaction_log co', 'co.id = o.transaction_id')
+                    // ->leftJoin('yoshop_goods_sn sn', 'sn.coll_id = co.coll_id')
                     ->leftJoin('yoshop_goods go', 'go.goods_id = o.goods_id')
-                    ->field('o.order_id,o.order_no,o.goods_id as g_id,go.xn_sale,sn.number,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
+                    ->field('o.order_id,o.order_no,o.goods_id as g_id,go.xn_sale,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
                     ->where('o.user_id', $userId)
                     // ->where('o.is_delete','=',$is_delete)
                     ->where($status)
@@ -1415,6 +1413,21 @@ class Checkout extends BaseService
 
                 $v['file_path'] = $image_id['file']['preview_url'];
             //}
+
+            // 查看藏品编号
+            $number = Db::name('coll')
+                        ->alias('a')
+                        ->leftJoin('yoshop_goods_sn b', 'a.coll_id = b.coll_id')
+                        ->where('a.order_no', $v['order_no'])
+                        ->value('number');
+            if(!$number) {
+                $number = Db::name('transaction_log')
+                            ->alias('a')
+                            ->leftJoin('yoshop_goods_sn b', 'a.coll_id = b.coll_id')
+                            ->where('a.transaction_id', $v['transaction_id'])
+                            ->value('number');
+            }
+            $v['number'] = $number;
         }
         return $orderList;
     }
