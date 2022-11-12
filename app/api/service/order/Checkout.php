@@ -1345,9 +1345,10 @@ class Checkout extends BaseService
 
         if(isset($orderType['is_delete']) && $orderType['is_delete'] > 0){
             $is_delete = 1;
-        }else{
-            $is_delete = 0;
         }
+        // else{
+        //     $is_delete = 0;
+        // }
         $type = [];
         // 待付款显示二级市场和一级市场所有订单
         if(isset($orderType['order_status']) && ($orderType['order_status'] != 10)) {
