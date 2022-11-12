@@ -83,8 +83,7 @@ class Nft extends Command
 
                 }
 
-
-                $o->save(['is_delete'=>1]);
+                $o->save(['is_delete'=>1, 'order_status' => 20]);
             }
         }
 

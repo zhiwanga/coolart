@@ -1343,11 +1343,11 @@ class Checkout extends BaseService
             }
         }
 
-        if(isset($orderType['is_delete']) && $orderType['is_delete'] > 0){
-            $is_delete = 1;
-        }else{
-            $is_delete = 0;
-        }
+        // if(isset($orderType['is_delete']) && $orderType['is_delete'] > 0){
+        //     $is_delete = 1;
+        // }else{
+        //     $is_delete = 0;
+        // }
         $type = [];
         // 待付款显示二级市场和一级市场所有订单
         if(isset($orderType['order_status']) && ($orderType['order_status'] != 10)) {
@@ -1384,7 +1384,7 @@ class Checkout extends BaseService
                     ->leftJoin('yoshop_goods go', 'go.goods_id = o.goods_id') 
                     ->field('o.order_id,o.order_no,o.goods_id as g_id,go.xn_sale,sn.number,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
                     ->where('o.user_id', $userId)
-                    ->where('o.is_delete','=',$is_delete)
+                    // ->where('o.is_delete','=',$is_delete)
                     ->where($status)
                     ->where($type)
                     ->order('o.create_time', 'desc')
