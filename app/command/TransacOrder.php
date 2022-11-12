@@ -20,7 +20,7 @@ class TransacOrder extends Command
     protected function execute(Input $input, Output $output)
     {
         $time  = time()-300;
-        $res = OrderModel::where('create_time', '<', $time)->where('order_status', 10)->where('type', 1)->save(['is_delete'=> 1, 'order_status' => 20]);
+        $res = OrderModel::where('create_time', '<', $time)->where('order_status', 10)->where('type', 1)->update(['is_delete'=> 1, 'order_status' => 20]);
         echo '更新数据：'. $res;
     }
 }

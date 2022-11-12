@@ -1353,9 +1353,7 @@ class Checkout extends BaseService
         if(isset($orderType['order_status']) && ($orderType['order_status'] != 10)) {
             // 我的转卖订单列表
             if(isset($orderType['type']) && $orderType['type']) {
-                if(1 == $orderType['type']) {
-                    $type['o.type'] = 0;
-                }else{
+                if(0 == $orderType['type']) {
                     $type['o.type'] = 1;
                 }
             }
