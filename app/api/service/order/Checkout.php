@@ -1424,7 +1424,7 @@ class Checkout extends BaseService
                 $number = Db::name('transaction_log')
                             ->alias('a')
                             ->leftJoin('yoshop_goods_sn b', 'a.coll_id = b.coll_id')
-                            ->where('a.transaction_id', $v['transaction_id'])
+                            ->where('a.id', $v['transaction_id'])
                             ->value('number');
             }
             $v['number'] = $number;
