@@ -627,8 +627,9 @@ class Checkout extends Controller
                     throw new Exception('商品不存在或已支付');
 
                 }
+                Order::where('order_no', $order_sn)->update(['order_no' => $orderNo, 'order_status' => 30]);
 
-                $res->save(['order_no' => $orderNo, 'order_status' => 30]);
+                // $res->save(['order_no' => $orderNo, 'order_status' => 30]);
 
             }else{
 
