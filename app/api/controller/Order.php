@@ -677,6 +677,7 @@ class Order extends Controller
             $data['requestNum'] = 'JD' . $orderNo;
             $data['amount'] = $transaction['price'];
             $arrList = OrderModel::field('order_id, order_no, pay_price')->where('order_status', 10)->where('user_id', $user_id)->where('transaction_id', $transactionId)->find();
+
             // 如果已有临时订单
             if($arrList) {
                 OrderModel::where('order_id', $arrList['order_id'])->update(['order_status' => 30]);
