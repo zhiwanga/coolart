@@ -1183,10 +1183,10 @@ class Checkout extends Controller
 
         }
 
-        $res = $order_info->save([
-            'is_delete' => 1,
+       $res = $order_info->save([
+            'order_status' => 20,
         ]);
-
+        
         if($res){
 
             Db::name('goods_sku')

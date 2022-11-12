@@ -534,7 +534,7 @@ class Order extends Controller
                             ->insert($orderGoods);
 
                         Db::commit();
-                        return $this->renderSuccess([], '临时订单创建成功！');
+                        return $this->renderSuccess(['orderTime' =>$arrList['create_time'],'order_id' =>$arrList['order_id']], '临时订单创建成功！');
                     } catch (\Exception $e) {
                         // 回滚事务
                         Db::rollback();
@@ -544,7 +544,13 @@ class Order extends Controller
             }
         }else{
             if($res['user_id'] == $user_id) {
-                return $this->renderSuccess([], '请尽快前往待支付订单购买！');
+                $order = OrderModel::where('user_id', $user_id)
+                 ->where('transaction_id', $param['transaction_id'])
+                 ->where('order_status', 10)
+                 ->find();
+          
+                return $this->renderSuccess(['orderTime' =>$order['create_time'],'order_id' =>$order['order_id']], '请尽快前往待支付订单购买！');
+            
             }else{
                 return $this->renderSuccess([], '商品已被占用！');
             }

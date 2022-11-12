@@ -1332,13 +1332,13 @@ class Checkout extends BaseService
 
             switch ($orderType['order_status']){
                 case 10:
-                    $status['o.pay_status'] = 10;
+                    $status['o.order_status'] = 10;
                     break;
                 case 30:
-                    $status['o.pay_status'] = 20;
+                    $status['o.order_status'] = 30;
                     break;
                 case 20:
-                    $status['o.pay_status'] = 10;
+                    $status['o.order_status'] = 20;
                     break;
             }
         }
@@ -1372,7 +1372,10 @@ class Checkout extends BaseService
                     ->alias('o')
                     ->leftJoin('yoshop_order_goods yog', 'o.order_id=yog.order_id')
                     ->leftJoin('yoshop_upload_file yuf', 'yog.image_id=yuf.file_id')
-                    ->field('o.order_id,o.order_no,o.goods_id as g_id,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
+                    ->join('yoshop_coll co', 'co.order_no = o.order_no')
+                    ->join('yoshop_goods_sn sn', 'sn.coll_id = co.coll_id')
+                    ->leftJoin('yoshop_goods go', 'go.goods_id = o.goods_id') 
+                    ->field('o.order_id,o.order_no,o.goods_id as g_id,go.xn_sale,sn.number,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
                     ->where('o.user_id', $userId)
                     ->order('o.create_time', 'desc')
                     ->paginate($listRows)->toArray();
@@ -1382,7 +1385,10 @@ class Checkout extends BaseService
                     ->alias('o')
                     ->leftJoin('yoshop_order_goods yog', 'o.order_id=yog.order_id')
                     ->leftJoin('yoshop_upload_file yuf', 'yog.image_id=yuf.file_id')
-                    ->field('o.order_id,o.order_no,o.goods_id as g_id,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
+                     ->join('yoshop_coll co', 'co.order_no = o.order_no')
+                    ->join('yoshop_goods_sn sn', 'sn.coll_id = co.coll_id')
+                    ->leftJoin('yoshop_goods go', 'go.goods_id = o.goods_id') 
+                    ->field('o.order_id,o.order_no,o.goods_id as g_id,go.xn_sale,sn.number,o.create_time,o.total_price,yog.goods_name,yuf.file_path,o.pay_status,o.is_box,o.order_status,o.pay_type,yog.goods_id,o.type,o.transaction_id,o.is_delete')
                     ->where('o.user_id', $userId)
                     ->where('o.is_delete','=',$is_delete)
                     ->where($status)
