@@ -356,6 +356,7 @@ class Order extends OrderModel
      */
     public static function getDetail(int $orderId, array $with = [])
     {
+        var_dump($orderId, UserService::getCurrentLoginUserId());die;
         // 查询订单记录
         $order = static::detail([
             'order_id' => $orderId,
