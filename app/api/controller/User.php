@@ -403,7 +403,7 @@ class User extends Controller
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function withdrawal($price,$type,$second_pswd, $cipcont)
+    public function withdrawal($price,$type, $cipcont)
     {
         $user = new UserModels();
         if($price<0){
