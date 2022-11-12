@@ -212,8 +212,12 @@ class Transaction extends BaseService
                 ->join(['yoshop_upload_file'=>'uf'],'gi.image_id=uf.file_id')
                 ->join(['yoshop_goods_sku'=>'gs'],'g.goods_id=gs.goods_id')
                 ->field('g.get_total,g.get_limit')
-                ->field('g.goods_id,g.goods_name,g.stock_total,g.update_time,g.goods_price_min,g.status,uf.file_path,g.content,gs.stock_num,g.startTime,g.author,g.goods_address,g.logo,uf.file_id')
+                ->field('g.goods_id,g.goods_name,g.stock_total,g.update_time,g.xn_sale,g.goods_price_min,g.status,uf.file_path,g.content,gs.stock_num,g.startTime,g.author,g.goods_address,g.logo,uf.file_id')
                 ->find();
+         
+             $coll = Db::name('coll') ->where('coll_id',$transaction['coll_id'])->find();
+            $sn = Db::name('goods_sn') ->where('coll_id',$coll['coll_id'])->find();
+            $good['number'] = $sn['number'];
 
             $good['content'] = htmlspecialchars_decode($good['content']);
             $good['transaction_id'] = $transactionId;
