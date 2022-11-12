@@ -73,24 +73,24 @@ class Transaction extends BaseService
             ->where('coll_id',$collId)
             ->where('goods_id',$coll['goods_id'])
             ->update(['status'=>1]);
-        $time = time();
-        // 转售增加订单
-        $orderInsert = [
-            'order_no'          => 'JD'.(new OrderModel)->orderNo(),
-            'total_price'       => $price,
-            'pay_price'         => $price,
-            'order_price'       => $price,
-            'user_id'           => $user_id,
-            'goods_id'          => $coll['goods_id'],
-            'transaction_id'    => $res->id,
-            'type'              => 1,
-            'pay_type'          => 0,
-            'store_id'          => 10001,
-            'goods_sum'         => 1,
-            'create_time'       => $time,
-            'update_time'       => $time,
-        ];
-        Db::name('order')->insert($orderInsert);
+        // $time = time();
+        // // 转售增加订单
+        // $orderInsert = [
+        //     'order_no'          => 'JD'.(new OrderModel)->orderNo(),
+        //     'total_price'       => $price,
+        //     'pay_price'         => $price,
+        //     'order_price'       => $price,
+        //     'user_id'           => $user_id,
+        //     'goods_id'          => $coll['goods_id'],
+        //     'transaction_id'    => $res->id,
+        //     'type'              => 1,
+        //     'pay_type'          => 0,
+        //     'store_id'          => 10001,
+        //     'goods_sum'         => 1,
+        //     'create_time'       => $time,
+        //     'update_time'       => $time,
+        // ];
+        // Db::name('order')->insert($orderInsert);
 
         return true;
     }
