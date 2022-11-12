@@ -628,7 +628,7 @@ class Checkout extends Controller
 
                 }
 
-                $res->save(['order_no' => $orderNo]);
+                $res->save(['order_no' => $orderNo, 'order_status' => 30]);
 
             }else{
 
