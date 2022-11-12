@@ -1344,13 +1344,9 @@ class Checkout extends BaseService
         }
 
         if(isset($orderType['is_delete']) && $orderType['is_delete'] > 0){
-
             $is_delete = 1;
-
         }else{
-
             $is_delete = 0;
-
         }
         $type = [];
         // 待付款显示二级市场和一级市场所有订单
@@ -1358,9 +1354,9 @@ class Checkout extends BaseService
             // 我的转卖订单列表
             if(isset($orderType['type']) && $orderType['type']) {
                 if(1 == $orderType['type']) {
-                    $type['type'] = 0;
+                    $type['o.type'] = 0;
                 }else{
-                    $type['type'] = 1;
+                    $type['o.type'] = 1;
                 }
             }
         }
