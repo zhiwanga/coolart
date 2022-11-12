@@ -655,7 +655,8 @@ class Checkout extends Controller
 
                 // 对接第三方市场，实时更新藏品价格 2022/11/07
                 RealtGoods::add($goodsId, $res['order_no'], $res['pay_price']);
-
+                // 更新订单状态为已支付
+                Db::name('order')->where('order_no', $res['order_no'])->update(['order_status' => 30]);
                 Db::commit();
 
                 return $this->renderSuccess('购买成功');
