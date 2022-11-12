@@ -136,7 +136,7 @@ class Transaction extends BaseService
      */
     public function list($param,int $listRows = 6)
     {
-        $order = 'createtime';
+        $order = 'create_time';
         $type = 'desc';
         if (isset($param['order'])){
             $order = $param['order'];
@@ -180,6 +180,18 @@ class Transaction extends BaseService
      */
     public function info($param)
     {
+        $order = 'create_time';
+        $type = 'desc';
+        if (isset($param['type'])){
+            $order = 'b.price';
+            $type = $param['type'];
+        }
+        $status = false;
+        if (isset($param['status'])){
+            $sta = intval($param['status']);
+            $status = $sta;
+        }
+
         $list = Db::name('goods_sn')
                     ->alias('a')
                     ->leftJoin('transaction_log b', 'a.coll_id = b.coll_id')
@@ -187,6 +199,11 @@ class Transaction extends BaseService
                     ->field('a.number, c.xn_sale, b.price, a.status')
                     ->where('a.goods_id', $param['goods_id'])
                     ->where('a.number', '<>', $param['number'])
+                    ->where('a.status', $status);
+        if($status || ($status === 0)) {
+            $list->where('a.status', $status);
+        }
+        $list = $list->order($order, $type)
                     ->select()
                     ->toArray();
         return $list;

@@ -31,16 +31,27 @@ class Observation
     {
         // $str = 'Nhx+kARSc9mkEjz6I2FIp52N4kJU3aD2yYTNLPbHMKZjqvMn/BhFG0prNPVYqdFS9mSef+e79pwHfB4fymPezpjdZMASl+h3+d0ksApnRiHMtKtLeV+7sz2r9pqK7SCnH/5Z3YZdqhJEDvdr6SQilv8pLMZ5a9TrTMeLPfySi/U=';
         // echo Rsa::privDecrypt($str);
-
+        $param['status'] = '0';
+        $status = false;
+        if (isset($param['status'])){
+            $sta = intval($param['status']);
+            $status = $sta;
+        }
+        $order = '';
+        $type = '';
         $list = Db::name('goods_sn')
-                    ->alias('a')
-                    ->leftJoin('transaction_log b', 'a.coll_id = b.coll_id')
-                    ->leftJoin('goods c', 'a.goods_id = c.goods_id')
-                    ->field('a.number, c.xn_sale, b.price, a.status')
-                    ->where('a.goods_id', 101)
-                    ->where('a.number', '<>', 11)
-                    ->select()
-                    ->toArray();
-                    var_dump($list);die;
+                ->alias('a')
+                ->leftJoin('transaction_log b', 'a.coll_id = b.coll_id')
+                ->leftJoin('goods c', 'a.goods_id = c.goods_id')
+                ->field('a.number, c.xn_sale, b.price, a.status')
+                ->where('a.goods_id', 101)
+                ->where('a.number', '<>', 11);
+                if($status || $status === 0) {
+                    $list->where('a.status', $status);
+                }
+                $list = $list->order($order, $type)
+                ->select()
+                ->toArray();
+                var_dump($list);die;
     }
 }
