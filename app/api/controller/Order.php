@@ -452,6 +452,17 @@ class Order extends Controller
     }
 
     /**
+     * 二级市场藏品详情
+     * @return json
+     */
+    public function marketdetails()
+    {
+        $transaction = new Transaction();
+        $info = $transaction->info($this->request->param());
+        return $this->renderSuccess($info);
+    }
+
+    /**
      * 二级市场购买创建临时订单
      * @return void
      */

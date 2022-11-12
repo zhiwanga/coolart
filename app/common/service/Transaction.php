@@ -174,6 +174,16 @@ class Transaction extends BaseService
     }
 
     /**
+     * 二级市场订单详情
+     * @param [type] $param
+     * @return array
+     */
+    public function info($param)
+    {
+        
+    }
+
+    /**
      * 二级市场点击购买生成临时订单（2022/11/11弃用）
      * @param [type] $param
      * @return void
