@@ -180,7 +180,7 @@ class Transaction extends BaseService
      */
     public function info($param)
     {
-        $order = 'create_time';
+        $order = 'a.create_time';
         $type = 'desc';
         if (isset($param['type'])){
             $order = 'b.price';
@@ -198,8 +198,7 @@ class Transaction extends BaseService
                     ->leftJoin('goods c', 'a.goods_id = c.goods_id')
                     ->field('a.number, c.xn_sale, b.price, a.status')
                     ->where('a.goods_id', $param['goods_id'])
-                    ->where('a.number', '<>', $param['number'])
-                    ->where('a.status', $status);
+                    ->where('a.number', '<>', $param['number']);
         if($status || ($status === 0)) {
             $list->where('a.status', $status);
         }
