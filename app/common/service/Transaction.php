@@ -184,9 +184,9 @@ class Transaction extends BaseService
                     ->alias('a')
                     ->leftJoin('transaction_log b', 'a.coll_id = b.coll_id')
                     ->leftJoin('goods c', 'a.goods_id = c.goods_id')
-                    ->field('a.number, c.xn_sale, b.price')
-                    ->where('goods_id', $param['goods_id'])
-                    ->where('number', '<>', $param['number'])
+                    ->field('a.number, c.xn_sale, b.price, a.status')
+                    ->where('a.goods_id', $param['goods_id'])
+                    ->where('a.number', '<>', $param['number'])
                     ->select()
                     ->toArray();
         return $list;
