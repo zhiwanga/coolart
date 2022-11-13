@@ -93,7 +93,7 @@ class Transaction extends BaseService
                                 ->leftJoin('yoshop_goods_image c','a.goods_id = c.goods_id')
                                 ->leftJoin('yoshop_upload_file d','c.image_id = d.file_id')
                                 ->leftJoin('yoshop_goods_sn e', 'a.coll_id = e.coll_id')
-                                ->field('a.status, a.updatetime, a.price, b.goods_name, b.xn_sale, d.file_path, e.number')
+                                ->field('a.status, a.createtime, a.buytime, a.updatetime, a.price, b.goods_name, b.xn_sale, d.file_path, e.number')
                                 ->where('a.user_id', $user_id);
         if(isset($param['status']) && $param['status'] != '') {
             $status = intval($param['status']);
@@ -216,7 +216,30 @@ class Transaction extends BaseService
         $list = $list->order($order, $type)
                     ->select()
                     ->toArray();
+        foreach ($list as $k => $v) {
+            
+            
+        }
         return $list;
+    }
+
+    public function array_unique_fb($array2D=[], $keys=[]){
+        $temp = [];
+        $temp2 = [];
+        foreach ($array2D as $k=>$v){  
+            $v=join(',',$v);  
+            $temp[$k]=$v;  
+        }  
+        $temp=array_unique($temp);
+    
+        foreach ($temp as $k => $v){  
+            $array=explode(',',$v);
+            foreach($keys as $index => $key)  
+            {    
+                $temp2[$k][$key] = $array[$index];  
+            }  
+        }  
+        return $temp2;  
     }
 
     /**
