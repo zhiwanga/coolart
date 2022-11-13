@@ -440,6 +440,16 @@ class Order extends Controller
         return $this->renderSuccess('下架成功！');
     }
 
+    public function salelist($status)
+    {
+        $transaction = new Transaction();
+        $res = $transaction->salelist($status);
+        if(!$res){
+            return $this->renderError('获取失败');
+        }
+        return $this->renderSuccess($res, 'SUCCESS');
+    }
+
     /**
      * 二级市场列表
      * @return Json
