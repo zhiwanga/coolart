@@ -95,7 +95,7 @@ class Transaction extends BaseService
                                 ->leftJoin('yoshop_goods_sn e', 'a.coll_id = e.coll_id')
                                 ->field('a.status, a.updatetime, a.price, b.goods_name, b.xn_sale, d.file_path, e.number')
                                 ->where('a.user_id', $user_id);
-        if(isset($param['status'])) {
+        if(isset($param['status']) && $param['status'] != '') {
             $status = intval($param['status']);
             if($status || $status === 0) {
                 $list->where('a.status', $status);
