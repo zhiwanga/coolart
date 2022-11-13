@@ -86,6 +86,7 @@ class Transaction extends BaseService
      */
     public function salelist($status)
     {
+        $status = intval($status);
         $user_id = User::getCurrentLoginUserId();
         $list = TransactionModel::alias('a')
                                 ->leftJoin('yoshop_goods b', 'a.goods_id = b.goods_id')
@@ -93,11 +94,13 @@ class Transaction extends BaseService
                                 ->leftJoin('yoshop_upload_file d','c.image_id = d.file_id')
                                 ->leftJoin('yoshop_goods_sn e', 'a.coll_id = e.coll_id')
                                 ->field('a.status, a.update_time, a.price, b.goods_name, b.xn_sale, d.file_path, e.number')
-                                ->where('a.user_id', $user_id)
-                                ->where('a.status', $status)
-                                ->order('a.id', 'desc')
-                                ->select()
-                                ->toArray();
+                                ->where('a.user_id', $user_id);
+        if($status || $status === 0) {
+            $list->where('a.status', $status);
+        }
+        $list = $list->order('a.id', 'desc')
+                    ->select()
+                    ->toArray();
         return $list;
     }
 
