@@ -190,9 +190,15 @@ class Transaction extends BaseService
                 }
             }
         }
-        usort($list, function ($current, $next) {
-            return $current['occupy'] < $next['occupy'];
-        });
+        $list = $list->toArray();
+
+        # 以二维数组的a作为比较值
+        $key = array_column(array_values($list['data']), 'occupy');
+        # 第一个参数需要提供二维数组排序依据
+        # 第二个排序方式 SORT_ASC:正序 SORT_DESC:倒序
+        # 第三个参数 要排序的二维数组,改动直接操作在该数组上
+        # 排序能保证key不改变
+        array_multisort($key, SORT_DESC, $arr);
 
         return $list;
     }
