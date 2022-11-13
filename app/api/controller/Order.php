@@ -440,10 +440,11 @@ class Order extends Controller
         return $this->renderSuccess('下架成功！');
     }
 
-    public function salelist($status)
+    public function salelist()
     {
+        $param = $this->request->param();
         $transaction = new Transaction();
-        $res = $transaction->salelist($status);
+        $res = $transaction->salelist($param);
         if(!$res){
             return $this->renderError('获取失败');
         }

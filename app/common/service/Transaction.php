@@ -84,9 +84,8 @@ class Transaction extends BaseService
      * @param [type] $cipcont
      * @return void
      */
-    public function salelist($status)
+    public function salelist($param)
     {
-        $status = intval($status);
         $user_id = User::getCurrentLoginUserId();
         $list = TransactionModel::alias('a')
                                 ->leftJoin('yoshop_goods b', 'a.goods_id = b.goods_id')
@@ -95,8 +94,11 @@ class Transaction extends BaseService
                                 ->leftJoin('yoshop_goods_sn e', 'a.coll_id = e.coll_id')
                                 ->field('a.status, a.updatetime, a.price, b.goods_name, b.xn_sale, d.file_path, e.number')
                                 ->where('a.user_id', $user_id);
-        if($status || $status === 0) {
-            $list->where('a.status', $status);
+        if(isset($param['status'])) {
+            $status = intval($param['status']);
+            if($status || $status === 0) {
+                $list->where('a.status', $status);
+            }
         }
         $list = $list->order('a.id', 'desc')
                     ->select()
