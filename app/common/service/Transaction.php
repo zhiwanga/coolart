@@ -93,7 +93,7 @@ class Transaction extends BaseService
                                 ->leftJoin('yoshop_goods_image c','a.goods_id = c.goods_id')
                                 ->leftJoin('yoshop_upload_file d','c.image_id = d.file_id')
                                 ->leftJoin('yoshop_goods_sn e', 'a.coll_id = e.coll_id')
-                                ->field('a.status, a.update_time, a.price, b.goods_name, b.xn_sale, d.file_path, e.number')
+                                ->field('a.status, a.updatetime, a.price, b.goods_name, b.xn_sale, d.file_path, e.number')
                                 ->where('a.user_id', $user_id);
         if($status || $status === 0) {
             $list->where('a.status', $status);
