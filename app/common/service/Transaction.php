@@ -102,8 +102,7 @@ class Transaction extends BaseService
             }
         }
         $list = $list->order('a.id', 'desc')
-                    ->select()
-                    ->toArray();
+                    ->paginate(15);
         return $list;
     }
 
