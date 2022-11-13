@@ -198,7 +198,7 @@ class Transaction extends BaseService
         # 第二个排序方式 SORT_ASC:正序 SORT_DESC:倒序
         # 第三个参数 要排序的二维数组,改动直接操作在该数组上
         # 排序能保证key不改变
-        array_multisort($key, SORT_DESC, $list);
+        array_multisort($key, SORT_DESC, $list['data']);
 
         return $list;
     }
