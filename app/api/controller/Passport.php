@@ -234,9 +234,9 @@ class Passport extends Controller
         $pass=$posta['password'];
 
         // 验证短信验证码是否匹配
-         /*if (!CaptchaApi::checkSms($posta['smsCode'],$phone)) {
-             throwError('短信验证码不正确');
-         }*/
+        if (!CaptchaApi::checkSms($posta['smsCode'],$phone)) {
+            throwError('短信验证码不正确');
+        }
 
         $userInfo = $LoginService->forgetPassMode($phone,$pass);
         if($userInfo){

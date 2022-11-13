@@ -758,20 +758,26 @@ class Order extends Controller
                     throw new Exception('余额不足');
                 }
 
-            }else if($pay_type == 'sd'){
+            }
+            // else if($pay_type == 'sd'){
 
-                $sd = new Sd();
+            //     $sd = new Sd();
 
-                $result = $sd->pay([
-                    'user_id'       => $user_id,
-                    'username'      => $user_car['idcar_name'],
-                    'idCard'        => $user_car['idcar'],
-                    'ordersn'       => $arrList['order_no'],
-                    'price'         => $arrList['pay_price'],
-                    'goods_name'    => '购买商品',
-                    'notify_url'    => 'api/callback/notify/type/sd',
-                ]);
+            //     $result = $sd->pay([
+            //         'user_id'       => $user_id,
+            //         'username'      => $user_car['idcar_name'],
+            //         'idCard'        => $user_car['idcar'],
+            //         'ordersn'       => $arrList['order_no'],
+            //         'price'         => $arrList['pay_price'],
+            //         'goods_name'    => '购买商品',
+            //         'notify_url'    => 'api/callback/notify/type/sd',
+            //     ]);
 
+            // }
+            else{
+                // 回滚事务
+                Db::rollback();
+                return $this->renderError('缺少传参');
             }
 
             Db::commit();

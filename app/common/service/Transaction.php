@@ -56,25 +56,34 @@ class Transaction extends BaseService
             return false;
         }
 
-        $log = [
-            'user_id' => $user_id,
-            'coll_id' => $collId,
-            'name' => $coll['goods_name'],
-            'level' => 1,
-            'type' => $coll['type'],
-            'price' => $price,
-            'createtime' => time(),
-            'updatetime' => time(),
-            'goods_id' => $coll['goods_id']
-        ];
-        $res = TransactionModel::create($log);
-        $coll->save(['status' => 1]);
-        //记录该编号为寄售中
-        Db::name('goods_sn')
-            ->where('coll_id',$collId)
-            ->where('goods_id',$coll['goods_id'])
-            ->update(['status'=>1]);
+        // 启动事务
+        Db::startTrans();
+        try {
+            $log = [
+                'user_id' => $user_id,
+                'coll_id' => $collId,
+                'name' => $coll['goods_name'],
+                'level' => 1,
+                'type' => $coll['type'],
+                'price' => $price,
+                'createtime' => time(),
+                'updatetime' => time(),
+                'goods_id' => $coll['goods_id']
+            ];
+            $res = TransactionModel::create($log);
+            $coll->save(['status' => 1]);
+            //记录该编号为寄售中
+            Db::name('goods_sn')
+                ->where('coll_id',$collId)
+                ->where('goods_id',$coll['goods_id'])
+                ->update(['status'=>1]);
 
+            Db::commit();
+        } catch (\Exception $e) {
+            // 回滚事务
+            Db::rollback();
+            return false;
+        }
         return true;
     }
 
@@ -181,6 +190,10 @@ class Transaction extends BaseService
                 }
             }
         }
+        usort($list, function ($current, $next) {
+            return $current['occupy'] < $next['occupy'];
+        });
+
         return $list;
     }
 
@@ -207,7 +220,7 @@ class Transaction extends BaseService
                     ->alias('a')
                     ->leftJoin('transaction_log b', 'a.coll_id = b.coll_id')
                     ->leftJoin('goods c', 'a.goods_id = c.goods_id')
-                    ->field('a.number, c.xn_sale, b.price, a.status, a.coll_id')
+                    ->field('a.number, c.xn_sale, c.goods_price_min, b.price, a.status, a.coll_id')
                     ->where('a.goods_id', $param['goods_id'])
                     ->where('a.number', '<>', $param['number']);
         if($status || ($status === 0)) {

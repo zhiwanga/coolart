@@ -337,7 +337,7 @@ class Blind extends Controller
 
             $arrList = BlindOrder::create($goodsarr); //创建订单
 
-            $transaction->save(['status' => 2]);
+            $transaction->save(['status' => 1]);
 
             $pay_price = $transaction['price'];
 
