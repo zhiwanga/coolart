@@ -64,6 +64,7 @@ class Transaction extends BaseService
             'type' => $coll['type'],
             'price' => $price,
             'createtime' => time(),
+            'updatetime' => time(),
             'goods_id' => $coll['goods_id']
         ];
         $res = TransactionModel::create($log);
@@ -122,7 +123,7 @@ class Transaction extends BaseService
         if (empty($coll)){
             return false;
         }
-        $transaction = TransactionModel::where(['coll_id' => $collId,'status' => 0,'user_id' => $user_id])->find();
+        $transaction = TransactionModel::where(['coll_id' => $collId,'status' => 0,'user_id' => $user_id, 'updatetime' => time()])->find();
         if (empty($transaction)){
             return false;
         }
