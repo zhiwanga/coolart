@@ -477,7 +477,7 @@ class Order extends Controller
 
         if(!$res) {
             // 检查此人取消订单数不超过三个
-            $daysum = OrderModel::where('user_id', $user_id)->where('type', 1)->whereDay('create_time')->where('is_delete', 1)->count();
+            $daysum = OrderModel::where('user_id', $user_id)->where('type', 1)->whereDay('create_time')->where('order_status', 20)->count();
             if($daysum >= 3) {
                 return $this->renderError('当天购买次数受限');
             }else{
