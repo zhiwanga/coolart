@@ -207,7 +207,7 @@ class Transaction extends BaseService
                     ->alias('a')
                     ->leftJoin('transaction_log b', 'a.coll_id = b.coll_id')
                     ->leftJoin('goods c', 'a.goods_id = c.goods_id')
-                    ->field('a.number, c.xn_sale, b.price, a.status')
+                    ->field('a.number, c.xn_sale, b.price, a.status, a.coll_id')
                     ->where('a.goods_id', $param['goods_id'])
                     ->where('a.number', '<>', $param['number']);
         if($status || ($status === 0)) {
@@ -216,30 +216,16 @@ class Transaction extends BaseService
         $list = $list->order($order, $type)
                     ->select()
                     ->toArray();
-        foreach ($list as $k => $v) {
-            
-            
-        }
+        $list = $this->array_unique_fb($list);
         return $list;
     }
 
-    public function array_unique_fb($array2D=[], $keys=[]){
+    public function array_unique_fb($array2D=[]){
         $temp = [];
-        $temp2 = [];
-        foreach ($array2D as $k=>$v){  
-            $v=join(',',$v);  
-            $temp[$k]=$v;  
-        }  
-        $temp=array_unique($temp);
-    
-        foreach ($temp as $k => $v){  
-            $array=explode(',',$v);
-            foreach($keys as $index => $key)  
-            {    
-                $temp2[$k][$key] = $array[$index];  
-            }  
-        }  
-        return $temp2;  
+        foreach ($array2D as $k=>$v){
+            $temp[$v['coll_id']] = $v;
+        }
+        return array_values($temp);
     }
 
     /**
