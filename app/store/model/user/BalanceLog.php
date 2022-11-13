@@ -16,6 +16,8 @@ use app\common\model\User;
 use app\common\model\user\BalanceLog as BalanceLogModel;
 use app\common\model\UserWallet;
 use think\Model;
+use app\store\service\store\User as StoreUserService;
+use app\common\enum\user\balanceLog\Scene as SceneEnum;
 
 /**
  * 用户余额变动明细模型
@@ -92,8 +94,15 @@ class BalanceLog extends BalanceLogModel
         if ($log['status'] != 0 || $log['scene'] != 50){
             return false;
         }
+           $storeUserName = StoreUserService::getLoginInfo()['user']['user_name'];
         if ($status == 2){
             User::setIncBalance($log['user_id'],abs($log['money']));
+             $diffMoney = abs((float)$log['money']);
+            BalanceLogModel::add(SceneEnum::ADMIN, [
+                'user_id' => $log['user_id'],
+                'money' => $diffMoney, 
+                'remark' => '提现审核拒绝返还',
+            ], [$storeUserName]);
         }
         $log->save(['status' => $status]);  //更新状态
         return true;
