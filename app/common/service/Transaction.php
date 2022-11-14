@@ -139,14 +139,21 @@ class Transaction extends BaseService
                                 ->leftJoin('yoshop_goods_sn e', 'a.coll_id = e.coll_id')
                                 ->field('a.status, a.createtime, a.buytime, a.updatetime, a.price, a.coll_id, b.goods_name, b.xn_sale, d.file_path, e.number')
                                 ->where('a.user_id', $user_id);
-        if(isset($param['status']) && $param['status'] != '') {
-            $status = intval($param['status']);
-            if($status || $status === 0) {
-                $list->where('a.status', $status);
-            }
+        $list->where('a.status', $param['status']);
+        if(intval($param['status']) === 0) {
+
+            $list = $list->order('a.createtime', 'desc')
+                        ->paginate(15)->toArray();
+        }elseif($param['status'] == 1) {
+            $list = $list->order('a.buytime', 'desc')
+                        ->paginate(15)->toArray();
+        }elseif($param['status'] == -1) {
+            $list = $list->order('a.updatetime', 'desc')
+                        ->paginate(15)->toArray();
+        }else{
+            $list = $list->order('a.id', 'desc')
+                        ->paginate(15)->toArray();
         }
-        $list = $list->order('a.updatetime', 'desc')
-                    ->paginate(15)->toArray();
         return $list;
     }
 
