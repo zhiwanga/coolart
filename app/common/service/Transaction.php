@@ -46,6 +46,11 @@ class Transaction extends BaseService
             'code' => 0,
             'msg'  => 'SUCCESS'
         ];
+        if($price <= 0) {
+            $res['code'] = 1;
+            $res['msg'] = '价格设置错误';
+            return $res;
+        }
         $user_id = User::getCurrentLoginUserId();
         $coll = Coll::where(['coll_id' => $collId,'user_id' => $user_id,'status' => 0])->find();
         if (empty($coll)){
@@ -62,6 +67,7 @@ class Transaction extends BaseService
 
         // 转售价格不能大于现价价格
         $limit_price = Db::name('goods')->where('goods_id', $coll['goods_id'])->value('limit_price');
+        
         if($limit_price != 0) {
             if($price > $limit_price) {
                 $res['code'] = 1;
