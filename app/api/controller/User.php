@@ -167,7 +167,7 @@ class User extends Controller
             'idname'=>$userInfo['idname'],
             'idcar'=>$userInfo['idcar'],
             'address'=>$userInfo['address'],
-            'trade_pass' => $userInfo['trade_pass'] ? false : 1
+            'trade_pass' => $userInfo['trade_pass'] ? true : false
         ], 'ok');
     }
 
