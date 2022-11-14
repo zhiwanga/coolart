@@ -788,12 +788,12 @@ class Order extends OrderModel
             return '该账号链账户地址不存在';
         }
 
-        $give_info = Db::name('coll')->where('coll_id',$collId)->find();
-
+        $give_info = Db::name('coll')->where('coll_id',$collId)->where('user_id', $user_info['user_id'])->find();
+        if(!$give_info) {
+            return '操作失败';
+        }
         if($give_info['is_give'] != 0){
-
             return '你已操作';
-
         }
 
         //查询购买时间是否在商品发售时间之前不可转赠
