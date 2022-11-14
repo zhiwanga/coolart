@@ -13,8 +13,8 @@ class Rsa
      */   
     private static function getPrivateKey() 
     {        
-        // $abs_path = '/www/wwwroot/serve/rsa_private_key.pem';
-        $abs_path = public_path().'..\rsa_private_key.pem';
+        $abs_path = '/www/wwwroot/serve/rsa_private_key.pem';
+        // $abs_path = public_path().'..\rsa_private_key.pem';
         $content = file_get_contents($abs_path);    
         return openssl_pkey_get_private($content);    
     }
@@ -25,8 +25,8 @@ class Rsa
      */   
     private static function getPublicKey()
     {   
-        // $abs_path = '/www/wwwroot/serve/rsa_public_key.pem';
-        $abs_path = public_path().'..\rsa_public_key.pem';
+        $abs_path = '/www/wwwroot/serve/rsa_public_key.pem';
+        // $abs_path = public_path().'..\rsa_public_key.pem';
         $content = file_get_contents($abs_path);    
         return openssl_pkey_get_public($content);
     }
