@@ -42,25 +42,33 @@ class Transaction extends BaseService
      */
     public function sale($collId,$price, $cipcont)
     {
+        $res = [
+            'code' => 0,
+            'msg'  => 'SUCCESS'
+        ];
         $user_id = User::getCurrentLoginUserId();
         $coll = Coll::where(['coll_id' => $collId,'user_id' => $user_id,'status' => 0])->find();
         if (empty($coll)){
-            return false;
+            return $res['msg'] = '藏品信息不存在';
+        }
+
+        if($coll['goods_id'] != 79) {
+            return $res['msg'] = '该商品暂时不能挂售';
         }
 
         // 转售价格不能大于现价价格
         $limit_price = Db::name('goods')->where('goods_id', $coll['goods_id'])->value('limit_price');
         if($limit_price != 0) {
             if($price > $limit_price) {
-                return false;
+                return $res['msg'] = '挂售价格不能大于限价';
             }
         }
         // rsa密钥检测
         if(isset($cipcont) && $cipcont) {
             $res = Rsa::rsaContCheck(5, $cipcont, $user_id);
-            if(!$res) return false;
+            if(!$res) return $res['msg'] = '密钥检测失败';
         }else{
-            return false;
+            return $res['msg'] = '密钥检测失败';
         }
 
         // 启动事务
@@ -77,7 +85,7 @@ class Transaction extends BaseService
                 'updatetime' => time(),
                 'goods_id' => $coll['goods_id']
             ];
-            $res = TransactionModel::create($log);
+            TransactionModel::create($log);
             $coll->save(['status' => 1]);
             //记录该编号为寄售中
             Db::name('goods_sn')
@@ -86,12 +94,12 @@ class Transaction extends BaseService
                 ->update(['status'=>1]);
 
             Db::commit();
+            return $res;
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
-            return false;
+            return $res['msg'] = 'error';
         }
-        return true;
     }
 
     /**

@@ -415,8 +415,8 @@ class Order extends Controller
     {
         $transaction = new Transaction();
         $res = $transaction->sale($collId,$price, $cipcont);
-        if(!$res){
-            return $this->renderError('转售失败！');
+        if($res['code'] != 0){
+            return $this->renderError($res['msg']);
         }
         return $this->renderSuccess('转售成功！');
     }
