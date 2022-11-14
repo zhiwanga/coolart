@@ -55,7 +55,8 @@ class UserWallet extends BaseModel
                     'status'        => 1,
                     'type'          => $res['data']['bank_info']['type'],
                     'bankName'      => $res['data']['bank_info']['bank'],
-                    'logo'          => $res['data']['bank_info']['logo']
+                    'logo'          => $res['data']['bank_info']['logo'],
+                    'create_time'    => time()
                 ];
                 UserBank::insert($insert);
             }else{
