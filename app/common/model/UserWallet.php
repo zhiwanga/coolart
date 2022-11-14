@@ -41,6 +41,7 @@ class UserWallet extends BaseModel
 
             // 银行卡检验
             $res = $this->bankcard234($data['cardno'], $user_idcar['idcar'], $data['mobile'], $user_idcar['idcar_name']);
+            $res = json_decode($res, true);
             if($res['data']['result'] == 0) {
 
                 UserBank::where('user_id', $user_id)->where('status', 1)->update(['status' => 0]);
