@@ -649,6 +649,33 @@ class Order extends Controller
             'data'=>$goods_sn_list
         ]);
     }
+    private function orderTempcen($order_id)
+    {
+        $order_info = OrderModel::where('order_id',$order_id)->find();
+
+        if(empty($order_info) || $order_info['is_delete'] == 1){
+            return [
+                'code' => 1,
+                'msg'  => '该订单已关闭'
+            ];
+        }
+
+        $res = $order_info->save([
+            'order_status' => 20,
+        ]);
+
+        Db::name('goods_sku')
+            ->where('goods_id', $order_info['goods_id'])
+            ->inc('stock_num',$order_info['goods_sum'])
+            ->update();
+        Db::name('goods')
+            ->where('goods_id', $order_info['goods_id'])
+            ->inc('stock_total',$order_info['goods_sum'])
+            ->update();
+        return [
+            'code' => 0
+        ];
+    }
 
     /**
      * 交易
@@ -677,6 +704,16 @@ class Order extends Controller
         $pay_type = $this->request->param('pay_type','balance');
         $orderModel = new OrderModel();
         $orderNo = $orderModel->orderNo();
+
+        // 判断订单支付时间是否到了
+        $arrList = OrderModel::field('order_id, order_no, pay_price, create_time')->where('order_status', 10)->where('user_id', $user_id)->where('transaction_id', $transactionId)->find();
+        $time  = time()-300;
+        if($arrList['create_time'] < $time) {
+            $rrr = $this->orderTempcen($arrList['order_id']);
+            if($rrr['code'] != 0) {
+                return $this->renderError('该订单已超时！');
+            }
+        }
         Db::startTrans();
         try {
             $transaction = TransactionModel::where('id',$transactionId)->lock(true)->find();
@@ -689,12 +726,10 @@ class Order extends Controller
             $data = jdConfig();
             $data['requestNum'] = 'JD' . $orderNo;
             $data['amount'] = $transaction['price'];
-            $arrList = OrderModel::field('order_id, order_no, pay_price')->where('order_status', 10)->where('user_id', $user_id)->where('transaction_id', $transactionId)->find();
 
             // 如果已有临时订单
             if($arrList) {
                 OrderModel::where('order_id', $arrList['order_id'])->update(['order_status' => 30]);
-
                 // 修改临时订单为已购买（2022/11/11 废弃）
                 // TransactionOrder::where('transaction_id', $transactionId)->where('user_id', $user_id)->update(['status' => 2]);
             }else{
