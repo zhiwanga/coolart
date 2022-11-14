@@ -229,6 +229,7 @@ class PaySuccess extends BaseService
             $goods = Db::name('order')->alias('a')
                                 ->leftJoin('transaction_log b', 'a.transaction_id = b.id')
                                 ->leftJoin('goods_sn c', 'b.coll_id = c.coll_id')
+                                ->where('a.order_no', $this->model['order_no'])
                                 ->field('c.number, b.name')
                                 ->find();
             BalanceLogModel::add(SceneEnum::CONSUME, [
