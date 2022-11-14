@@ -39,8 +39,9 @@ class UserWallet extends BaseModel
         }else{
             $user_idcar = UserIdcar::field('idcar_name, idcar')->where('user_id', $user_id)->find();
 
-            // 银行卡校监
+            // 银行卡检验
             $res = $this->bankcard234($data['cardno'], $user_idcar['idcar'], $data['mobile'], $user_idcar['idcar_name']);
+            $res = json_decode($res, true);
             if($res['data']['result'] == 0) {
 
                 UserBank::where('user_id', $user_id)->where('status', 1)->update(['status' => 0]);
@@ -56,7 +57,6 @@ class UserWallet extends BaseModel
                     'logo'          => $res['data']['bank_info']['logo']
                 ];
                 UserBank::insert($insert);
-
             }else{
                 return false;
             }
