@@ -137,7 +137,7 @@ class Transaction extends BaseService
                                 ->leftJoin('yoshop_goods_image c','a.goods_id = c.goods_id')
                                 ->leftJoin('yoshop_upload_file d','c.image_id = d.file_id')
                                 ->leftJoin('yoshop_goods_sn e', 'a.coll_id = e.coll_id')
-                                ->field('a.status, a.createtime, a.buytime, a.updatetime, a.price, b.goods_name, b.xn_sale, d.file_path, e.number')
+                                ->field('a.status, a.createtime, a.buytime, a.updatetime, a.price, a.coll_id, b.goods_name, b.xn_sale, d.file_path, e.number')
                                 ->where('a.user_id', $user_id);
         if(isset($param['status']) && $param['status'] != '') {
             $status = intval($param['status']);
@@ -189,7 +189,7 @@ class Transaction extends BaseService
      * @return \think\Paginator
      * @throws \think\db\exception\DbException
      */
-    public function list($param,int $listRows = 6)
+    public function list($param,int $listRows = 20)
     {
         $order = 'createtime';
         $type = 'desc';
@@ -204,36 +204,20 @@ class Transaction extends BaseService
         }else{
             $keyword = $param['keyword'];
         }
-        $list = TransactionModel::with(['goods.file','goodssn','goodsinfo'])
-            ->alias('t')
-            ->where('t.buyer_id',0)
-            ->where('t.status',0)
-            ->where('t.name','like','%'.$keyword.'%')
-            ->order($order,$type)
-            ->paginate($listRows);
-        if ($list){
-            foreach ($list as &$value){
-                $value['file_path'] = $value['goods']['file']['preview_url'];
-                $value['get_total'] = $value['goodsinfo']['xn_sale'];
-                $value['number']    = $value['goodssn']['number'];
-                unset($value['goods']);unset($value['goodssn']);
-                // 查看商品是否占用
-                $value['occupy'] = 0;
-                $res = Db::name('order')->where('order_status', 10)->where('type', 1)->where('transaction_id', $value['id'])->find();
-                if($res) {
-                    $value['occupy'] = 1;
-                }
-            }
-        }
-        $list = $list->toArray();
-
-        # 以二维数组的a作为比较值
-        $key = array_column(array_values($list['data']), 'occupy');
-        # 第一个参数需要提供二维数组排序依据
-        # 第二个排序方式 SORT_ASC:正序 SORT_DESC:倒序
-        # 第三个参数 要排序的二维数组,改动直接操作在该数组上
-        # 排序能保证key不改变
-        array_multisort($key, SORT_DESC, $list['data']);
+        $list = TransactionModel::alias('a')
+                        ->leftJoin('goods b', 'a.goods_id = b.goods_id')
+                        ->leftJoin('goods_image c', 'a.goods_id = c.goods_id')
+                        ->leftJoin('upload_file d', 'c.image_id = d.file_id')
+                        ->leftJoin('goods_sn e', 'a.coll_id = e.coll_id')
+                        ->leftJoin('order f', 'a.id = f.transaction_id and f.order_status = 10 and f.type = 1')
+                        ->field('a.id, a.user_id, a.coll_id, a.name, a.level, a.type, a.price, a.createtime, a.buyer_id, a.buytime, a.updatetime, a.status, a.goods_id, b.get_total, b.xn_sale, d.file_path, e.number, f.order_id occupy')
+                        ->where('a.buyer_id', 0)
+                        ->where('a.status', 0)
+                        ->where('a.name', 'like', '%'.$keyword.'%')
+                        ->order('occupy', 'desc')
+                        ->order($order, $type)
+                        ->paginate($listRows)
+                        ->toArray();
 
         return $list;
     }
