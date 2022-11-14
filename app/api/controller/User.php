@@ -428,7 +428,7 @@ class User extends Controller
     }
 
     /**
-     * 收款编辑
+     * 绑定银行卡
      * @return Json
      * @throws \cores\exception\BaseException
      * @throws \think\db\exception\DataNotFoundException
@@ -455,6 +455,26 @@ class User extends Controller
                 return $this->renderError('操作失败');
             }
             return $this->renderSuccess('修改成功');
+        }else{
+            return $this->renderError('缺少传参');
+        }
+    }
+
+    /**
+     * 解绑银行卡
+     * @return void
+     */
+    public function unbank()
+    {
+        $id = input('id');
+        if($id) {
+            $user_id = UserService::getCurrentLoginUserId();
+            $res = Db::name('user_bank')->where('id', $id)->where('status', 1)->where('user_id', $user_id)->update(['status' => 2, 'is_delete' => 1]);
+            if($res) {
+                return $this->renderSuccess('SUCCESS');
+            }else{
+                return $this->renderError('解绑失败');
+            }
         }else{
             return $this->renderError('缺少传参');
         }
