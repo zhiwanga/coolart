@@ -721,7 +721,9 @@ class Order extends OrderModel
                 $file = $upload->get($file_id);
 //            }
             $value['file_path'] = 'uploads/'.$file['file_path'];
-
+            if($value['addtime'] == 0) {
+                $value['addtime'] = time();
+            }
             //获取转赠后的时间
             if($value['zztime'] > time()){
                 $value['zs_type']=0;
