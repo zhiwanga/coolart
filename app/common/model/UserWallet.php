@@ -35,7 +35,8 @@ class UserWallet extends BaseModel
         $user_id = User::getCurrentLoginUserId();
         $bank = UserBank::where('user_id', $user_id)->where('cardNo', $data['cardno'])->find();
         if($bank) {
-            return false;
+            UserBank::where('user_id', $user_id)->where('cardNo', $data['cardno'])->update(['status' => 1, 'is_delete' => 0]);
+            return true;
         }else{
             $user_idcar = UserIdcar::field('idcar_name, idcar')->where('user_id', $user_id)->find();
 
