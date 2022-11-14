@@ -12,6 +12,7 @@ declare (strict_types=1);
 
 namespace app\common\model;
 
+use app\api\model\UserBank;
 use cores\BaseModel;
 use think\Model;
 use app\api\service\User;
@@ -32,37 +33,63 @@ class UserWallet extends BaseModel
     public function edit($data)
     {
         $user_id = User::getCurrentLoginUserId();
-        if (!isset($data['type'])){
+        $bank = UserBank::where('user_id', $user_id)->where('cardNo', $data['cardno'])->find();
+        if($bank) {
             return false;
-        }
-        $wallet = $this->where(['user_id' => $user_id,'type' => $data['type']])->find();
-        if (empty($wallet)){
-            if ($data['type'] == 0 || $data['type'] == 1){
-                $info = [
-                    'user_id' => $user_id,
-                    'name' => $data['name'],
-                    'mobile' => $data['mobile'],
-                    'type' => $data['type'],
-                    'path' => $data['path'],
-                    'real_name' => $data['real_name']
-                ];
-            }elseif ($data['type'] == 2){
-                $info = [
-                    'user_id' => $user_id,
-                    'name' => $data['name'],  //卡号
-                    'bank' => $data['bank'], //银行
-                    'branch' => $data['branch'],   //支行
-                    'real_name' => $data['real_name'],  //真实姓名
-                    'mobile' => $data['mobile'],  //手机号
-                    'type' => $data['type']
-                ];
-            }
-            $this->save($info);
         }else{
-            $wallet->save($data);
+            $user_idcar = UserIdcar::field('idcar_name, idcar')->where('user_id', $user_id)->find();
+
+            // 银行卡校监
+            $res = $this->bankcard234($data['cardno'], $user_idcar['idcar'], $data['mobile'], $user_idcar['idcar_name']);
+            if($res['data']['result'] == 0) {
+
+                UserBank::where('user_id', $user_id)->where('status', 1)->update(['status' => 0]);
+                $insert = [
+                    'requestNum'    => $res['data']['order_no'],
+                    'idCardNo'      => $user_idcar['idcar'],
+                    'cardNo'        => $data['cardno'],
+                    'phone'         => $data['mobile'],
+                    'payerName'     => $user_idcar['idcar_name'],
+                    'status'        => 1,
+                    'type'          => $res['data']['bank_info']['type'],
+                    'bankName'      => $res['data']['bank_info']['bank'],
+                    'logo'          => $res['data']['bank_info']['logo']
+                ];
+                UserBank::insert($insert);
+
+            }else{
+                return false;
+            }
         }
 
         return true;
+    }
+
+    private function bankcard234($bankcard, $idcard, $mobile, $name)
+    {
+        $host = "https://slybank234.market.alicloudapi.com";
+        $path = "/bankcard234/check";
+        $method = "GET";
+        $appcode = "2dc90be803904d8c9d6bcbc4f3481101";
+        $headers = array();
+        array_push($headers, "Authorization:APPCODE " . $appcode);
+        $querys = "bankcard=".$bankcard."&idcard=".$idcard."&mobile=".$mobile."&name=".$name;
+        $bodys = "";
+        $url = $host . $path . "?" . $querys;
+
+        $curl = curl_init();
+        curl_setopt($curl, CURLOPT_CUSTOMREQUEST, $method);
+        curl_setopt($curl, CURLOPT_URL, $url);
+        curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
+        curl_setopt($curl, CURLOPT_FAILONERROR, false);
+        curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($curl, CURLOPT_HEADER, true);
+        if (1 == strpos("$".$host, "https://"))
+        {
+            curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);
+            curl_setopt($curl, CURLOPT_SSL_VERIFYHOST, false);
+        }
+        return curl_exec($curl);
     }
 
     public function info()

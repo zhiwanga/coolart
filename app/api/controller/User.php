@@ -438,7 +438,7 @@ class User extends Controller
     public function collectionEdit()
     {
         $wallet = new UserWallet();
-        $posta=$this->postForm();
+        $posta = $this->postForm();
         $second_pswd = $posta['second_pswd'];
 
         $user = UserService::getCurrentLoginUser();
@@ -459,12 +459,15 @@ class User extends Controller
         // if($second_pswd != $user['trade_pass']) {
         //     return $this->renderError('二级密码输入错误');
         // }
-
-        $res = $wallet->edit($this->postForm());
-        if (!$res){
-            return $this->renderError('修改失败');
+        if($posta['cardno'] && $posta['mobile']) {
+            $res = $wallet->edit($posta);
+            if(!$res) {
+                return $this->renderError('操作失败');
+            }
+            return $this->renderSuccess('修改成功');
+        }else{
+            return $this->renderError('缺少传参');
         }
-        return $this->renderSuccess('修改成功');
     }
 
     /**
