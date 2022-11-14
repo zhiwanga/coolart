@@ -41,7 +41,6 @@ class UserWallet extends BaseModel
 
             // 银行卡检验
             $res = $this->bankcard234($data['cardno'], $user_idcar['idcar'], $data['mobile'], $user_idcar['idcar_name']);
-            $res = json_decode($res, true);
             if($res['data']['result'] == 0) {
 
                 UserBank::where('user_id', $user_id)->where('status', 1)->update(['status' => 0]);
@@ -83,7 +82,7 @@ class UserWallet extends BaseModel
         curl_setopt($curl, CURLOPT_HTTPHEADER, $headers);
         curl_setopt($curl, CURLOPT_FAILONERROR, false);
         curl_setopt($curl, CURLOPT_RETURNTRANSFER, true);
-        curl_setopt($curl, CURLOPT_HEADER, true);
+        curl_setopt($curl, CURLOPT_HEADER, false);
         if (1 == strpos("$".$host, "https://"))
         {
             curl_setopt($curl, CURLOPT_SSL_VERIFYPEER, false);

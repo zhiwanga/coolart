@@ -438,7 +438,7 @@ class User extends Controller
     public function collectionEdit()
     {
         $wallet = new UserWallet();
-        $posta = $this->postForm();
+        $posta = input();
 
         $user = UserService::getCurrentLoginUser();
         // rsa密钥检测
