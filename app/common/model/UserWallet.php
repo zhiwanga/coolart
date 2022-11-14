@@ -46,6 +46,7 @@ class UserWallet extends BaseModel
 
                 UserBank::where('user_id', $user_id)->where('status', 1)->update(['status' => 0]);
                 $insert = [
+                    'user_id'       => $user_id,
                     'requestNum'    => $res['data']['order_no'],
                     'idCardNo'      => $user_idcar['idcar'],
                     'cardNo'        => $data['cardno'],
