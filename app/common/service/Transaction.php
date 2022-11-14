@@ -145,7 +145,7 @@ class Transaction extends BaseService
                 $list->where('a.status', $status);
             }
         }
-        $list = $list->order('a.id', 'desc')
+        $list = $list->order('a.updatetime', 'desc')
                     ->paginate(15)->toArray();
         return $list;
     }
