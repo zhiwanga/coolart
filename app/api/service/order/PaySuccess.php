@@ -226,10 +226,15 @@ class PaySuccess extends BaseService
             // 更新用户余额
             UserModel::setDecBalance((int)$this->user['user_id'], (float)$this->model['pay_price']);
             // 新增余额变动记录
+            $goods = Db::name('order')->alias('a')
+                                ->leftJoin('transaction_log b', 'a.transaction_id = b.id')
+                                ->leftJoin('goods_sn c', 'b.coll_id = c.coll_id')
+                                ->field('c.number, b.name')
+                                ->find();
             BalanceLogModel::add(SceneEnum::CONSUME, [
                 'user_id' => (int)$this->user['user_id'],
                 'money' => -$this->model['pay_price'],
-            ], ['order_no' => $this->model['order_no']]);
+            ], ['order_no' => '商品：'.$goods['name'].'，编号：'.$goods['number'].'，订单号：'.$this->model['order_no']]);
         }
         // 微信支付
         if ($payType == OrderPayTypeEnum::WECHAT) {
