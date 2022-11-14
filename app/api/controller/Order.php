@@ -673,7 +673,7 @@ class Order extends Controller
             ->inc('stock_total',$order_info['goods_sum'])
             ->update();
         return [
-            'code' => 0
+            'code' => 1
         ];
     }
 
