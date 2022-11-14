@@ -93,16 +93,23 @@ class BalanceLog extends BalanceLogModel
         $log = $this->get($logId);
         if ($log['status'] != 0 || $log['scene'] != 50){
             return false;
-        }
-           $storeUserName = StoreUserService::getLoginInfo()['user']['user_name'];
+        } 
         if ($status == 2){
             User::setIncBalance($log['user_id'],abs($log['money']));
              $diffMoney = abs((float)$log['money']);
-            BalanceLogModel::add(SceneEnum::ADMIN, [
+                BalanceLogModel::adds(SceneEnum::ADMIN, [
                 'user_id' => $log['user_id'],
-                'money' => $diffMoney, 
+                'money' =>    $diffMoney, 
                 'remark' => '提现审核拒绝返还',
-            ], [$storeUserName]);
+                'describe' => '提现审核拒绝返还',
+            ]);
+        }else{
+            BalanceLogModel::adds(SceneEnum::ADMIN, [
+                'user_id'  => $log['user_id'],
+                'money'    =>    0,  
+                'status'   =>    1,
+                'describe' => '审核通过，请注意查收到账信息',
+            ]);
         }
         $log->save(['status' => $status]);  //更新状态
         return true;

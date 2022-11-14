@@ -55,5 +55,14 @@ class BalanceLog extends BaseModel
             'store_id' => $model::$storeId
         ], $data));
     }
+    
+    public static function adds(int $scene, array $data)
+    {
+        $model = new static;
+        $model->save(array_merge([
+            'scene' => $scene, 
+            'store_id' => $model::$storeId
+        ], $data));
+    }
 
 }
