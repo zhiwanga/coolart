@@ -439,15 +439,8 @@ class User extends Controller
     {
         $wallet = new UserWallet();
         $posta = $this->postForm();
-        $second_pswd = $posta['second_pswd'];
 
         $user = UserService::getCurrentLoginUser();
-
-        // 验证短信验证码是否匹配
-        //  if (!CaptchaApi::checkSms($posta['smsCode'],$user['mobile'])) {
-        //     throwError('短信验证码不正确');
-        //  }
-
         // rsa密钥检测
         if(isset($posta['cipcont']) && $posta['cipcont']) {
             $res = Rsa::rsaContCheck(1, $posta['cipcont'], $user['user_id']);
@@ -456,9 +449,6 @@ class User extends Controller
             return $this->renderError('缺少传参');
         }
 
-        // if($second_pswd != $user['trade_pass']) {
-        //     return $this->renderError('二级密码输入错误');
-        // }
         if($posta['cardno'] && $posta['mobile']) {
             $res = $wallet->edit($posta);
             if(!$res) {
