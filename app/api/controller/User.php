@@ -473,7 +473,7 @@ class User extends Controller
             if($res) {
                 return $this->renderSuccess('SUCCESS');
             }else{
-                return $this->renderError('解绑失败');
+                return $this->renderError('参数错误');
             }
         }else{
             return $this->renderError('缺少传参');
