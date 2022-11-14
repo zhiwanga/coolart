@@ -108,7 +108,7 @@ class UserWallet extends BaseModel
 
         // return $data;
 
-        $res = UserBank::field('RIGHT(cardNo, 4) as cardno, bankName, type')
+        $res = UserBank::field('RIGHT(cardNo, 4) as cardno, bankName, type, id')
                         ->where('user_id', $user_id)
                         ->where('status', 1)
                         ->select()

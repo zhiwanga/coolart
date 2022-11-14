@@ -36,22 +36,15 @@ class BalanceLog extends BalanceLogModel
         // 设置查询条件
         $filter = $this->getFilter($param);
         // 获取列表数据
-        $data = $this
-            ->with(['user.avatar'])
-            ->alias('log')
-            ->field('log.*')
-            ->where($filter)
-            ->join('user', 'user.user_id = log.user_id')
-            ->order(['log.create_time' => 'desc'])
-            ->paginate(15);
+        $data = $this->with(['user.avatar'])
+                    ->alias('log')
+                    ->field('log.*, a.cardNo, a.bankName')
+                    ->where($filter)
+                    ->join('user', 'user.user_id = log.user_id')
+                    ->join('user_bank a', 'log.bank_id = a.id')
+                    ->order(['log.create_time' => 'desc'])
+                    ->paginate(15);
 
-        foreach ($data as &$value){
-            $wallet = UserWallet::where(['user_id' => $value['user_id'],'type' => $value['type']])->find();
-//            if ($value['type'] != 2){
-//                $wallet['path'] = $wallet['path'];
-//            }
-            $value['wallet'] = $wallet;
-        }
         return $data;
     }
 

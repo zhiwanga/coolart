@@ -256,26 +256,30 @@ class User extends BaseModel
         ];
         $user = $this->where('user_id',$user_id)->find();
 
-        if ($user['balance'] < $price){
+        if (($price > 0) && ($user['balance'] < $price)){
             $res['msg'] = '余额不足';
             return $res;
         }
 
-        $wallet = UserWallet::where(['user_id' => $user_id,'type' => $type])->find();
+        $wallet = UserBank::field('RIGHT(cardNo, 4) as cardno, id')->where(['user_id' => $user_id,'status' => 1])->find();
         if (empty($wallet)){
             $res['msg'] = '请先完善收款信息';
             return $res;
         }
-        $diffMoney = '-'.$price;
         //扣除用户余额
-        $this->setDecBalance($user_id,(float)$price);
+        $this->setDecBalance($user_id, (float)$price);
+        
+        // 手续费
+        $price = $price - ($price * 0.015);
+        $diffMoney = '-'.$price;
         // 新增余额变动记录
         BalanceLogModel::add(SceneEnum::WITHDRAWAL, [
             'user_id' => $user_id,
             'money' => (float)$diffMoney,
             'remark' => '申请提现',
-            'type' => $type
-        ], ['申请提现']);
+            'type' => $type,
+            'bank_id' => $wallet['id']
+        ], ['申请提现-到账卡号('.$wallet['cardno'].')']);
         $res = [
             'msg' => '提现成功',
             'code' => '200',
