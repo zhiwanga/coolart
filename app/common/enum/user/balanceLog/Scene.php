@@ -35,6 +35,9 @@ class Scene extends EnumBasics
 
     // 申请提现
     const WITHDRAWAL = 50;
+    
+    // 二级市场收款
+    const MARKET = 60;
 
     /**
      * 获取订单类型值
@@ -68,7 +71,11 @@ class Scene extends EnumBasics
                 'value' => self::WITHDRAWAL,
                 'describe' => '申请提现：%s',
             ],
+            self::MARKET => [
+                'name' => '商品售卖',
+                'value' => self::MARKET,
+                'describe' => '商品售卖：%s',
+            ],
         ];
     }
-
 }

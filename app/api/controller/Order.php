@@ -37,6 +37,8 @@ use app\api\model\User as UserModel;
 use app\common\model\Goods;
 use app\api\service\User as UserService;
 use app\controller\Rsa;
+use app\api\model\user\BalanceLog as BalanceLogModel;
+use app\common\enum\user\balanceLog\Scene as SceneEnum;
 
 /**
  * 我的订单控制器
@@ -757,6 +759,20 @@ class Order extends Controller
 
                     throw new Exception('余额不足');
                 }
+
+                $templog = TransactionModel::alias('a')
+                ->leftJoin('goods_sn b', 'a.coll_id = b.coll_id')
+                ->field('a.name, b.number')
+                ->where('a.id', $transactionId)
+                ->find();
+                // 新增余额变动记录
+                BalanceLogModel::add(SceneEnum::MARKET, [
+                    'user_id' => $transaction['user_id'],
+                    'money' => (float) $transaction['price'],
+                    'remark' => '二级市场转卖到账',
+                    'type' => 4, // 增加账单数据
+                    'bank_id' => 0
+                ], ['商品名称：'.$templog['name'].'，编号：'.$templog['number']]);
 
             }
             // else if($pay_type == 'sd'){

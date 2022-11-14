@@ -383,6 +383,8 @@ class Blind extends Controller
                     'notify_url'    => 'api/callback/blind_notify/type/sd',
                 ]);
 
+            }else{
+                return $this->renderError('缺少传参');
             }
 
             Db::commit();
