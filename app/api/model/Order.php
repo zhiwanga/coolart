@@ -625,18 +625,11 @@ class Order extends OrderModel
     public function myColl($type,$state,$status,$keyword,$goods_id,$tran_type){
         $userid = UserService::getCurrentLoginUserId();
 
-
-
         if($type == 1){
-
             $where[] = ['c.is_give','=',1];
-
         }else{
-
             $where = [['c.is_give','=',0]];
         }
-
-
 
         if(!empty($state)){
 

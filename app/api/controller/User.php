@@ -166,8 +166,8 @@ class User extends Controller
             'file_path' =>$userInfo['avatar_url'],
             'idname'=>$userInfo['idname'],
             'idcar'=>$userInfo['idcar'],
-            'address'=>$userInfo['address']
-            // 'trade_pass'=>$userInfo['trade_pass']
+            'address'=>$userInfo['address'],
+            'trade_pass' => $userInfo['trade_pass'] ? false : 1
         ], 'ok');
     }
 

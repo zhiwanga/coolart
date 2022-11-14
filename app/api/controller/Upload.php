@@ -75,9 +75,9 @@ class Upload extends Controller
         $model->add($fileInfo, FileTypeEnum::IMAGE, $userId);
         $data = $model->toArray();
 
-if($type=='head'){
-        $a=User::update(['avatar_id' => $data['file_id']],['user_id' => $userId]);
-}
+        // if($type=='head'){
+            $a=User::update(['avatar_id' => $data['file_id']],['user_id' => $userId]);
+        // }
         
        
         // 图片上传成功
