@@ -478,7 +478,7 @@ class User extends Controller
     {
         $wallet = new UserWallet();
         $data = $wallet->info();
-        return $this->renderSuccess(compact('data'));
+        return $this->renderSuccess($data, 'SUCCESS');
     }
 
     /**
