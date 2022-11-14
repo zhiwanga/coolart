@@ -760,15 +760,24 @@ class Order extends Controller
                     throw new Exception('余额不足');
                 }
 
+                // 二级市场转卖，记录收益金额
                 $templog = TransactionModel::alias('a')
-                ->leftJoin('goods_sn b', 'a.coll_id = b.coll_id')
-                ->field('a.name, b.number')
-                ->where('a.id', $transactionId)
-                ->find();
+                                            ->leftJoin('goods_sn b', 'a.coll_id = b.coll_id')
+                                            ->field('a.name, b.number')
+                                            ->where('a.id', $transactionId)
+                                            ->find();
+                // 如果商品单独设置了手续费则使用商品的
+                $config = Integrals::field('charges,copyright')->find();
+                $rate = Db::name('goods')->where('goods_id', $transaction['goods_id'])->value('rate');
+                if(0 != $rate) {
+                    $config['charges'] = $rate;
+                }
+                $price = $transaction['price'] * (100 - ($config['charges'] + $config['copyright'])) / 100;
+
                 // 新增余额变动记录
                 BalanceLogModel::add(SceneEnum::MARKET, [
                     'user_id' => $transaction['user_id'],
-                    'money' => (float) $transaction['price'],
+                    'money' => (float) $price,
                     'remark' => '二级市场转卖到账',
                     'type' => 4, // 增加账单数据
                     'bank_id' => 0
