@@ -708,7 +708,9 @@ class Order extends Controller
         // 判断订单支付时间是否到了
         $arrList = OrderModel::field('order_id, order_no, pay_price, create_time')->where('order_status', 10)->where('user_id', $user_id)->where('transaction_id', $transactionId)->find();
         $time  = time();
-        $tempcreatetime = $arrList['create_time']+300;
+        $tempnum = 300;
+        $tempcreatetime = strtotime($arrList['create_time']) + $tempnum;
+
         if($tempcreatetime < $time) {
             $this->orderTempcen($arrList['order_id']);
             return $this->renderError('该订单已超时！');
