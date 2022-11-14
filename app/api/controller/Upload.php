@@ -78,8 +78,7 @@ class Upload extends Controller
         // if($type=='head'){
             $a=User::update(['avatar_id' => $data['file_id']],['user_id' => $userId]);
         // }
-        
-       
+
         // 图片上传成功
         return $this->renderSuccess(['fileInfo' => $data], '图片上传成功');
     }
