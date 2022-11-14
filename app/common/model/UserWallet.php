@@ -95,16 +95,23 @@ class UserWallet extends BaseModel
     public function info()
     {
         $user_id = User::getCurrentLoginUserId();
-//        var_dump($user_id);exit;
-        $data = $this->where('user_id',$user_id)->select();
-        if (!empty($data)){
-            foreach ($data as &$value){
-                if ($value['status'] == 1 || $value['status'] == 2){
-                    $value['path'] = base_url() . 'uploads/' . $value['path'];
-                }
-            }
-        }
+        // $data = $this->where('user_id',$user_id)->select();
+        // if (!empty($data)){
+        //     foreach ($data as &$value){
+        //         if ($value['status'] == 1 || $value['status'] == 2){
+        //             $value['path'] = base_url() . 'uploads/' . $value['path'];
+        //         }
+        //     }
+        // }
 
-        return $data;
+        // return $data;
+
+        $res = UserBank::field('RIGHT(cardNo, 4) as cardno, bankname, type')
+                        ->where('user_id', $user_id)
+                        ->where('status', 1)
+                        ->select()
+                        ->toArray();
+
+        return $res;
     }
 }
