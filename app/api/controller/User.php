@@ -403,7 +403,7 @@ class User extends Controller
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function withdrawal($price,$type, $cipcont)
+    public function withdrawal($price,$id,$cipcont)
     {
         $user = new UserModels();
         if($price<0){
@@ -420,7 +420,7 @@ class User extends Controller
             return $this->renderError('缺少传参');
         }
 
-        $res = $user->withdrawal($price,$type);
+        $res = $user->withdrawal($price,$id);
         if ($res['code'] == 500){
             return $this->renderError($res['msg']);
         }

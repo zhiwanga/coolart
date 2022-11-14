@@ -247,7 +247,7 @@ class User extends BaseModel
         return $log;
     }
 
-    public function withdrawal($price,$type)
+    public function withdrawal($price,$id)
     {
         $user_id = UserService::getCurrentLoginUserId();
         $res = [
@@ -277,8 +277,8 @@ class User extends BaseModel
             'user_id' => $user_id,
             'money' => (float)$diffMoney,
             'remark' => '申请提现',
-            'type' => $type,
-            'bank_id' => $wallet['id']
+            'type' => 2,
+            'bank_id' => $id
         ], ['申请提现-到账卡号('.$wallet['cardno'].')']);
         $res = [
             'msg' => '提现成功',
