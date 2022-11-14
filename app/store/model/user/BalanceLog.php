@@ -89,11 +89,13 @@ class BalanceLog extends BalanceLogModel
             return false;
         } 
         if ($status == 2){
-            User::setIncBalance($log['user_id'],abs($log['money']));
-             $diffMoney = abs((float)$log['money']);
+              $diffMoney = abs((float)$log['money']);
+             $backMoney =floatval($diffMoney / 0.985);
+            User::setIncBalance($log['user_id'],$backMoney);
+           
                 BalanceLogModel::adds(SceneEnum::ADMIN, [
                 'user_id' => $log['user_id'],
-                'money' =>    $diffMoney, 
+                'money' =>    $backMoney, 
                 'remark' => '提现审核拒绝返还',
                 'describe' => '提现审核拒绝返还',
             ]);
