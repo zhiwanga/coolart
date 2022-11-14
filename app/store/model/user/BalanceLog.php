@@ -38,10 +38,11 @@ class BalanceLog extends BalanceLogModel
         // 获取列表数据
         $data = $this->with(['user.avatar'])
                     ->alias('log')
-                    ->field('log.*, a.cardNo, a.bankName')
+                    ->field('log.*, a.cardNo, a.bankName, b.idcar_name, b.idcar')
                     ->where($filter)
                     ->join('user', 'user.user_id = log.user_id')
                     ->leftjoin('user_bank a', 'log.bank_id = a.id')
+                    ->leftjoin('user_idcar b', 'log.user_id = b.user_id')
                     ->order(['log.create_time' => 'desc'])
                     ->paginate(15);
 
@@ -70,8 +71,8 @@ class BalanceLog extends BalanceLogModel
         !empty($params['search']) && $filter[] = ['user.nick_name', 'like', "%{$params['search']}%"];
         // 余额变动场景
         $params['scene'] > 0 && $filter[] = ['log.scene', '=', (int)$params['scene']];
-        
-          isset($params['type']) && $params['type'] > 0 && $filter[] = ['log.scene','=',50];
+
+        isset($params['type']) && $params['type'] > 0 && $filter[] = ['log.scene','=',50];
         // 起止时间
         if (!empty($params['betweenTime'])) {
             $times = between_time($params['betweenTime']);
