@@ -48,6 +48,7 @@ class Transaction extends BaseService
             return false;
         }
 
+        // 转售价格不能大于现价价格
         $limit_price = Db::name('goods')->where('goods_id', $coll['goods_id'])->value('limit_price');
         if($limit_price != 0) {
             if($price > $limit_price) {
