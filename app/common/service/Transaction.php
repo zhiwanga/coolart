@@ -48,6 +48,12 @@ class Transaction extends BaseService
             return false;
         }
 
+        $limit_price = Db::name('goods')->where('goods_id', $coll['goods_id'])->value('limit_price');
+        if($limit_price != 0) {
+            if($price > $limit_price) {
+                return false;
+            }
+        }
         // rsa密钥检测
         if(isset($cipcont) && $cipcont) {
             $res = Rsa::rsaContCheck(5, $cipcont, $user_id);
