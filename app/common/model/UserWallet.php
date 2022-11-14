@@ -72,7 +72,7 @@ class UserWallet extends BaseModel
         $appcode = "2dc90be803904d8c9d6bcbc4f3481101";
         $headers = array();
         array_push($headers, "Authorization:APPCODE " . $appcode);
-        $querys = "bankcard=".$bankcard."&idcard=".$idcard."&mobile=".$mobile."&name=".$name;
+        $querys = "bankcard=".$bankcard."&idcard=".$idcard."&mobile=".$mobile."&name=".urlencode($name);
         $bodys = "";
         $url = $host . $path . "?" . $querys;
 
