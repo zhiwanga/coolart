@@ -41,7 +41,7 @@ class BalanceLog extends BalanceLogModel
                     ->field('log.*, a.cardNo, a.bankName')
                     ->where($filter)
                     ->join('user', 'user.user_id = log.user_id')
-                    ->join('user_bank a', 'log.bank_id = a.id')
+                    ->leftjoin('user_bank a', 'log.bank_id = a.id')
                     ->order(['log.create_time' => 'desc'])
                     ->paginate(15);
 
