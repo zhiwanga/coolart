@@ -779,6 +779,7 @@ class Order extends Controller
                     'user_id' => $transaction['user_id'],
                     'money' => (float) $price,
                     'remark' => '二级市场转卖到账',
+                    'status' => 3,
                     'type' => 4, // 增加账单数据
                     'bank_id' => 0
                 ], ['商品名称：'.$templog['name'].'，编号：'.$templog['number']]);
