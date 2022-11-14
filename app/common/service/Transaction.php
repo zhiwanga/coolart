@@ -49,26 +49,33 @@ class Transaction extends BaseService
         $user_id = User::getCurrentLoginUserId();
         $coll = Coll::where(['coll_id' => $collId,'user_id' => $user_id,'status' => 0])->find();
         if (empty($coll)){
-            return $res['msg'] = '藏品信息不存在';
+            $res['msg'] = '藏品信息不存在';
+            return $res;
         }
 
         if($coll['goods_id'] != 79) {
-            return $res['msg'] = '该商品暂时不能挂售';
+            $res['msg'] = '该商品暂时不能挂售';
+            return $res;
         }
 
         // 转售价格不能大于现价价格
         $limit_price = Db::name('goods')->where('goods_id', $coll['goods_id'])->value('limit_price');
         if($limit_price != 0) {
             if($price > $limit_price) {
-                return $res['msg'] = '挂售价格不能大于限价';
+                $res['msg'] = '挂售价格不能大于限价';
+                return $res;
             }
         }
         // rsa密钥检测
         if(isset($cipcont) && $cipcont) {
             $res = Rsa::rsaContCheck(5, $cipcont, $user_id);
-            if(!$res) return $res['msg'] = '密钥检测失败';
+            if(!$res){
+                $res['msg'] = '密钥检测失败';
+                return $res;
+            }
         }else{
-            return $res['msg'] = '密钥检测失败';
+            $res['msg'] = '密钥检测失败';
+            return $res;
         }
 
         // 启动事务
@@ -98,7 +105,8 @@ class Transaction extends BaseService
         } catch (\Exception $e) {
             // 回滚事务
             Db::rollback();
-            return $res['msg'] = 'error';
+            $res['msg'] = 'error';
+            return $res;
         }
     }
 
