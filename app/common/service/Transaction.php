@@ -138,11 +138,11 @@ class Transaction extends BaseService
         if (empty($coll)){
             return false;
         }
-        $transaction = TransactionModel::where(['coll_id' => $collId,'status' => 0,'user_id' => $user_id, 'updatetime' => time()])->find();
+        $transaction = TransactionModel::where(['coll_id' => $collId,'status' => 0,'user_id' => $user_id])->find();
         if (empty($transaction)){
             return false;
         }
-        $transaction->save(['status' => -1]);
+        $transaction->save(['status' => -1, 'updatetime' => time()]);
         $coll->save(['status' => 0]);
         //退出寄售
         Db::name('goods_sn')
