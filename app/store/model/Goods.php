@@ -286,6 +286,12 @@ class Goods extends GoodsModel
      */
     private function createData(array $data): array
     {
+        if($data['cover_id']) {
+            $data['cover_path'] = Db::name('upload_file')->where('file_id', $data['cover_id']['0'])->value('file_path');
+        }else{
+            unset($data['cover_id']);
+            $data['cover_path'] = '';
+        }
         // 默认数据
         $data = array_merge($data, [
             'line_price' => $data['line_price'] ?? 0,
