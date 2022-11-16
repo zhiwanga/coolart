@@ -249,11 +249,11 @@ class Transaction extends BaseService
             $order = 'b.price';
             $type = $param['type'];
         }
-        $status = false;
-        if (isset($param['status'])){
-            $sta = intval($param['status']);
-            $status = $sta;
-        }
+        // $status = false;
+        // if (isset($param['status'])){
+        //     $sta = intval($param['status']);
+        //     $status = $sta;
+        // }
 
         $list = Db::name('goods_sn')
                     ->alias('a')
@@ -262,9 +262,9 @@ class Transaction extends BaseService
                     ->field('a.number, c.xn_sale, c.goods_price_min, b.price, a.status, a.coll_id')
                     ->where('a.goods_id', $param['goods_id'])
                     ->where('a.number', '<>', $param['number']);
-        if($status || ($status === 0)) {
-            $list->where('a.status', $status);
-        }
+        // if($status || ($status === 0)) {
+            $list->where('a.status', 10);
+        // }
         $list = $list->order($order, $type)
                     ->select()
                     ->toArray();
