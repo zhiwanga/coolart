@@ -178,6 +178,7 @@ class PaySuccess extends BaseService
         $order = [
             'pay_type' => $payType,
             'pay_status' => PayStatusEnum::SUCCESS,
+            'order_status' => 30,
             'pay_time' => time()
         ];
 
