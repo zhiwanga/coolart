@@ -59,11 +59,11 @@ class Transaction extends BaseService
             return $res;
         }
 
-        // if($coll['goods_id'] != 97) {
-        //     $res['code'] = 1;
-        //     $res['msg'] = '该商品暂时不能挂售';
-        //     return $res;
-        // }
+        if($coll['goods_id'] != 79) {
+            $res['code'] = 1;
+            $res['msg'] = '该商品暂时不能挂售';
+            return $res;
+        }
 
         // 转售价格不能大于现价价格
         $limit_price = Db::name('goods')->where('goods_id', $coll['goods_id'])->value('limit_price');
@@ -230,7 +230,9 @@ class Transaction extends BaseService
                         ->order($order, $type)
                         ->paginate($listRows)
                         ->toArray();
-
+        foreach ($list['data'] as $k => $v) {
+            $list['data'][$k]['file_path'] = 'https://coolart.space/uploads/'.$v['file_path'];
+        }
         return $list;
     }
 
