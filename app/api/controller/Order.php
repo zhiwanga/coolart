@@ -39,6 +39,7 @@ use app\api\service\User as UserService;
 use app\controller\Rsa;
 use app\api\model\user\BalanceLog as BalanceLogModel;
 use app\common\enum\user\balanceLog\Scene as SceneEnum;
+use app\model\market\RealtGoods;
 
 /**
  * 我的订单控制器
@@ -320,8 +321,7 @@ class Order extends Controller
         //获取赠送目标用户ID
         $heUserId=$posta['heuserid'];
         
-        // $second_pswd = $posta['second_pswd'];
-        // return $this->renderError('限时关闭转赠功能！');
+        return $this->renderError('限时关闭转赠功能！');
 
         $user_id = UserService::getCurrentLoginUserId();
 
@@ -707,6 +707,9 @@ class Order extends Controller
 
         // 判断订单支付时间是否到了
         $arrList = OrderModel::field('order_id, order_no, pay_price, create_time')->where('order_status', 10)->where('user_id', $user_id)->where('transaction_id', $transactionId)->find();
+        if(!$arrList) {
+            return $this->renderError('该订单已超时！');
+        }
         $time  = time();
         $tempnum = 300;
         $tempcreatetime = strtotime($arrList['create_time']) + $tempnum;
@@ -792,7 +795,6 @@ class Order extends Controller
 
                 // 余额支付
                 if(!$orderModel->onPaymentByBalance($model['order_no'])){
-
                     throw new Exception('余额不足');
                 }
 
@@ -820,27 +822,13 @@ class Order extends Controller
                     'bank_id' => 0
                 ], ['商品名称：'.$templog['name'].'，编号：'.$templog['number']]);
 
-            }
-            // else if($pay_type == 'sd'){
-
-            //     $sd = new Sd();
-
-            //     $result = $sd->pay([
-            //         'user_id'       => $user_id,
-            //         'username'      => $user_car['idcar_name'],
-            //         'idCard'        => $user_car['idcar'],
-            //         'ordersn'       => $arrList['order_no'],
-            //         'price'         => $arrList['pay_price'],
-            //         'goods_name'    => '购买商品',
-            //         'notify_url'    => 'api/callback/notify/type/sd',
-            //     ]);
-
-            // }
-            else{
+            }else{
                 // 回滚事务
                 Db::rollback();
                 return $this->renderError('缺少传参');
             }
+            // 对接第三方市场，实时更新藏品价格 2022/11/07
+            RealtGoods::add($transaction['goods_id'], $arrList['order_no'], $transaction['price']);
 
             Db::commit();
 
