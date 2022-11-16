@@ -263,7 +263,7 @@ class Transaction extends BaseService
                     ->where('a.goods_id', $param['goods_id'])
                     ->where('a.number', '<>', $param['number']);
         // if($status || ($status === 0)) {
-            $list->where('a.status', 10);
+            $list->where('a.status', 1);
         // }
         $list = $list->order($order, $type)
                     ->select()
