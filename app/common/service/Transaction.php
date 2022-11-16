@@ -231,9 +231,8 @@ class Transaction extends BaseService
                         ->paginate($listRows)
                         ->toArray();
         foreach ($list['data'] as $k => $v) {
-            $list['data'][$k]['file_path'] = 'uploads/'.$v['file_path'];
+            $list['data'][$k]['file_path'] = 'https://coolart.space/uploads/'.$v['file_path'];
         }
-
         return $list;
     }
 
