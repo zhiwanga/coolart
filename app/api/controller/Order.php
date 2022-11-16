@@ -968,7 +968,6 @@ class Order extends Controller
         return $this->renderSuccess($config,'获取成功');
     }
 
-
     /**
      * 清理超时未支付订单
      */
@@ -995,5 +994,4 @@ class Order extends Controller
         }
         return $this->renderSuccess('操作成功！');
     }
-
 }

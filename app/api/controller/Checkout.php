@@ -662,7 +662,7 @@ class Checkout extends Controller
                 return $this->renderSuccess('购买成功');
 
             }else{
-
+                throw new Exception('请求失败');
                 $alipay = new \app\common\library\Pay();
 
                 $result = $alipay->createDLBPay([
