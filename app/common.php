@@ -762,12 +762,12 @@ function rateLess($type = 1, $user_id, $price, $goods_rate = 0)
     if(!$rate){
         $result = [
             'ratedis' => 0,
-            'price'   => $price * 0.015
+            'price'   => $price - ($price * 0.015)
         ];
     }else{
         if($type == 1) {
             // 提现费率
-            $price = $price * (0.015 - ($rate['withdrawal_rate'] / 100));
+            $price = $price - ($price * (0.015 - ($rate['withdrawal_rate'] / 100)));
             $result = [
                 'ratedis'   => $rate['withdrawal_rate'],
                 'price'     => $price
