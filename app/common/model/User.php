@@ -22,6 +22,7 @@ use think\model\relation\HasOne;
 use think\model\relation\HasMany;
 use think\model\relation\BelongsTo;
 use app\common\model\user\PointsLog as PointsLogModel;
+use think\facade\Db;
 
 /**
  * 用户模型类
@@ -270,15 +271,13 @@ class User extends BaseModel
         $this->setDecBalance($user_id, (float)$price);
         
         // 计算费率
-        // $price_data = $this->rateLess($user_id, $price);
-        // $ratedis = '费率';
+        $price_data = rateLess(1, $user_id, $price);
+        $ratedis = '';
 
-        // if($price_data['ratedis'] != 0) {
-
-        // }
-        // 手续费
-        // $diffMoney = '-'.$price_data['price'];
-        $diffMoney = '-'.$price;
+        if($price_data['ratedis'] != 0) {
+            $ratedis = '(费率折扣-'.$price_data['ratedis'].')';
+        }
+        $diffMoney = '-'.$price_data['price'];
         // 新增余额变动记录
         BalanceLogModel::add(SceneEnum::WITHDRAWAL, [
             'user_id' => $user_id,
@@ -286,17 +285,12 @@ class User extends BaseModel
             'remark' => '申请提现',
             'type' => 2,
             'bank_id' => $id
-        ], ['申请提现-到账卡号('.$wallet['cardno'].')']);
+        ], ['申请提现'.$ratedis.'-到账卡号('.$wallet['cardno'].')']);
         $res = [
             'msg' => '提现成功',
             'code' => '200',
         ];
         return $res;
-    }
-
-    private function rateLess()
-    {
-
     }
 
     /**

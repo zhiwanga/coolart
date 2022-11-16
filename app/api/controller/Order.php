@@ -804,23 +804,24 @@ class Order extends Controller
                                             ->field('a.name, b.number')
                                             ->where('a.id', $transactionId)
                                             ->find();
-                // 如果商品单独设置了手续费则使用商品的
-                $config = Integrals::field('charges,copyright')->find();
+                // 查看商品费率
                 $rate = Db::name('goods')->where('goods_id', $transaction['goods_id'])->value('rate');
-                if(0 != $rate) {
-                    $config['charges'] = $rate;
+                $price_data = rateLess(2, $transaction['user_id'], $transaction['price'], $rate);
+
+                $ratedis = '';
+                if($price_data['ratedis'] != 0) {
+                    $ratedis = '(费率折扣-'.$price_data['ratedis'].')';
                 }
-                $price = $transaction['price'] * (100 - ($config['charges'] + $config['copyright'])) / 100;
 
                 // 新增余额变动记录
                 BalanceLogModel::add(SceneEnum::MARKET, [
                     'user_id' => $transaction['user_id'],
-                    'money' => (float) $price,
+                    'money' => (float) $price_data['price'],
                     'remark' => '二级市场转卖到账',
                     'status' => 3,
                     'type' => 4, // 增加账单数据
                     'bank_id' => 0
-                ], ['商品名称：'.$templog['name'].'，编号：'.$templog['number']]);
+                ], ['商品名称：'.$templog['name'].'，编号：'.$templog['number']. '，'.$ratedis]);
 
             }else{
                 // 回滚事务

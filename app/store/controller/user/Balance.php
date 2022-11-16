@@ -42,7 +42,7 @@ class Balance extends Controller
     public function examine($logId,$status)
     {
         $model = new BalanceLogModel;
-        $res = $model->examine($logId,$status);
+        $res = $model->examine($logId, $status);
         if (!$res){
             return $this->renderError('审核失败');
         }

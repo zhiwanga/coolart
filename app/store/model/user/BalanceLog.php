@@ -18,6 +18,7 @@ use app\common\model\UserWallet;
 use think\Model;
 use app\store\service\store\User as StoreUserService;
 use app\common\enum\user\balanceLog\Scene as SceneEnum;
+use think\facade\Db;
 
 /**
  * 用户余额变动明细模型
@@ -89,10 +90,23 @@ class BalanceLog extends BalanceLogModel
             return false;
         } 
         if ($status == 2){
-              $diffMoney = abs((float)$log['money']);
-             $backMoney =floatval($diffMoney / 0.985);
-            User::setIncBalance($log['user_id'],$backMoney);
-           
+                $diffMoney = abs((float)$log['money']);
+                
+                $goods_id = discountGoods();
+                $israte = Db::name('coll')
+                            ->alias('a')
+                            ->leftJoin('goods b', 'a.goods_id = b.goods_id')
+                            ->leftJoin('rate_control c', 'b.rate_id = c.id')
+                            ->field('c.withdrawal_rate, c.transac_rate')
+                            ->where('a.goods_id', $goods_id)
+                            ->where('a.user_id', $log['user_id'])
+                            ->find();
+                if($israte) {
+                    $rate = 0.985 + $israte['withdrawal_rate'];
+                }
+                $backMoney = floatval($diffMoney / $rate);
+                User::setIncBalance($log['user_id'],$backMoney);
+
                 BalanceLogModel::adds(SceneEnum::ADMIN, [
                 'user_id' => $log['user_id'],
                 'money' =>    $backMoney, 

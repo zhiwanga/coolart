@@ -20,9 +20,11 @@ use think\facade\Log;
 use think\facade\Config;
 use think\facade\Request;
 use app\common\library\helper;
+use app\common\model\Integrals;
 use cores\exception\BaseException;
 use cores\exception\DebugException;
 use think\exception\HttpResponseException;
+use think\facade\Db;
 use Yansongda\Pay\Pay;
 use think\response\Json;
 /**
@@ -731,16 +733,59 @@ function renderError(string $message = 'error', array $data = []): Json
 {
     return renderJson(config('status.error'), $message, $data);
 }
-
-// 如果存在该商品费率折扣
-function tempRateReduce()
+// 设置可以减免得商品
+function discountGoods()
 {
-    return [
-        5,6
-    ];
+    return 6;
 }
-// 提现手续费
-function tempRate()
+
+/**
+ * 费率减扣+价格计算
+ * @param [type] $type 1：提现，2：转卖
+ * @param [type] $user_id
+ * @param [type] $price
+ * @param [type] $goods_id 拥有该商品可以减费率
+ * @param [type] $goods_rate 商品的费率
+ * @return array
+ */
+function rateLess($type = 1, $user_id, $price, $goods_rate = 0)
 {
-    return 1.5;
+    $goods_id = discountGoods();
+    $rate = Db::name('coll')
+                ->alias('a')
+                ->leftJoin('goods b', 'a.goods_id = b.goods_id')
+                ->leftJoin('rate_control c', 'b.rate_id = c.id')
+                ->field('c.withdrawal_rate, c.transac_rate')
+                ->where('a.goods_id', $goods_id)
+                ->where('a.user_id', $user_id)
+                ->find();
+    if(!$rate){
+        $result = [
+            'ratedis' => 0,
+            'price'   => $price
+        ];
+    }else{
+        if($type == 1) {
+            // 提现费率
+            $price = $price * (0.015 - ($rate['withdrawal_rate'] / 100));
+            $result = [
+                'ratedis'   => $rate['withdrawal_rate'],
+                'price'     => $price
+            ];
+        }else{
+            // 转卖费率
+            // 如果商品单独设置了手续费则使用商品的
+            $config = Integrals::field('charges, copyright')->find();
+            if(0 != $goods_rate) {
+                $config['charges'] = $rate;
+            }
+            $price = $price * (100 - (($config['charges'] + $config['copyright']) - $rate['withdrawal_rate'])) / 100;
+
+            $result = [
+                'ratedis' => $rate['withdrawal_rate'],
+                'price'   => $price
+            ];
+        }
+    }
+    return $result;
 }
