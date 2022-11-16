@@ -406,12 +406,12 @@ class User extends Controller
     public function withdrawal($price,$id,$cipcont)
     {
         $user = new UserModels();
-        if($price<0){
+        if($price < 0){
             return $this->renderError("无效提现金额!");
-       }
-          if($price<100){
-        return $this->renderError("提现金额不能小于100!");
-   }
+        }
+        if($price < 100){
+            return $this->renderError("提现金额不能小于100!");
+        }
         $user_id = UserService::getCurrentLoginUserId();
 
         // rsa密钥检测

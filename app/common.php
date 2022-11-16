@@ -731,3 +731,16 @@ function renderError(string $message = 'error', array $data = []): Json
 {
     return renderJson(config('status.error'), $message, $data);
 }
+
+// 如果存在该商品费率折扣
+function tempRateReduce()
+{
+    return [
+        5,6
+    ];
+}
+// 提现手续费
+function tempRate()
+{
+    return 1.5;
+}
