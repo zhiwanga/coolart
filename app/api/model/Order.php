@@ -698,7 +698,7 @@ class Order extends OrderModel
         $myCollList = Db::name('coll')
             ->alias('c')
             // ->field('c.coll_id,c.goods_id,c.addtime,c.zztime,c.coll_no,c.status,c.goods_name,yg.goods_address,yg.logo,yg.is_box,c.image_id,no.tx_hash,us.address as usaddress,sn.number,yg.xn_sale,c.status')
-            ->field('c.coll_id,c.goods_id,no.create_time addtime,c.zztime,c.coll_no,c.status,c.goods_name,yg.goods_address,yg.logo,yg.is_box,c.image_id,no.tx_hash,us.address as usaddress,sn.number,yg.xn_sale,c.status')
+            ->field('c.coll_id,c.goods_id,no.create_time addtime, yg.cover_path, c.zztime,c.coll_no,c.status,c.goods_name,yg.goods_address,yg.logo,yg.is_box,c.image_id,no.tx_hash,us.address as usaddress,sn.number,yg.xn_sale,c.status')
             ->where($where)
             ->where($user_where)
             ->leftJoin('yoshop_goods yg','c.goods_id=yg.goods_id')
@@ -720,7 +720,7 @@ class Order extends OrderModel
                 $file_id = $image->where('goods_id',$value['goods_id'])->value('image_id');
                 $file = $upload->get($file_id);
 //            }
-            $value['file_path'] = 'uploads/'.$file['file_path'];
+            $value['goods_image'] = $file['file_path'];
             if($value['addtime'] == 0) {
                 $value['addtime'] = time();
             }

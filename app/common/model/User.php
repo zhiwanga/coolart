@@ -269,8 +269,15 @@ class User extends BaseModel
         //扣除用户余额
         $this->setDecBalance($user_id, (float)$price);
         
+        // 计算费率
+        // $price_data = $this->rateLess($user_id, $price);
+        // $ratedis = '费率';
+
+        // if($price_data['ratedis'] != 0) {
+
+        // }
         // 手续费
-        $price = $price - ($price * 0.015);
+        // $diffMoney = '-'.$price_data['price'];
         $diffMoney = '-'.$price;
         // 新增余额变动记录
         BalanceLogModel::add(SceneEnum::WITHDRAWAL, [
@@ -285,6 +292,11 @@ class User extends BaseModel
             'code' => '200',
         ];
         return $res;
+    }
+
+    private function rateLess()
+    {
+
     }
 
     /**
