@@ -762,7 +762,7 @@ function rateLess($type = 1, $user_id, $price, $goods_rate = 0)
     if(!$rate){
         $result = [
             'ratedis' => 0,
-            'price'   => $price
+            'price'   => $price * 0.015
         ];
     }else{
         if($type == 1) {
