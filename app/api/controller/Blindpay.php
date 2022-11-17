@@ -35,11 +35,8 @@ class Blindpay extends Controller
         if(!$redis->get('lock_'.$blind_id.$user_id)){
 
             $redis->set('lock_'.$blind_id.$user_id,1,2);
-
         }else{
-
             return $this->renderError('请勿重复点击');
-
         }
 
         $blind_info = \app\common\model\Blind::where('id',$blind_id)->where('is_delete',0)->find();
