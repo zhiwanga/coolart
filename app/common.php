@@ -733,11 +733,6 @@ function renderError(string $message = 'error', array $data = []): Json
 {
     return renderJson(config('status.error'), $message, $data);
 }
-// 设置可以减免得商品
-function discountGoods()
-{
-    return 6;
-}
 
 /**
  * 获取提现手续费
@@ -757,22 +752,32 @@ function withdrawalRate()
  */
 function rateLess($type = 1, $user_id, $price)
 {
-    $goods_id = discountGoods();
-
     $rate = Db::name('coll')
                 ->alias('a')
                 ->leftJoin('goods b', 'a.goods_id = b.goods_id')
                 ->leftJoin('rate_control c', 'b.rate_id = c.id')
                 ->field('c.withdrawal_rate, c.transac_rate')
-                ->where('a.goods_id', $goods_id)
+                ->where('b.rate_id', '>', 0)
                 ->where('a.user_id', $user_id)
                 ->find();
 
     if(!$rate){
-        $result = [
-            'ratedis' => 0,
-            'price'   => $price - ($price * 0.015)
-        ];
+        if($type == 1) {
+            // 提现费率
+            $result = [
+                'ratedis' => 0,
+                'price'   => $price - ($price * 0.015)
+            ];
+        }else{
+            // 转卖费率
+            // 如果商品单独设置了手续费则使用商品的
+            $config = Integrals::where('id', 1)->field('charges, copyright')->find();
+            $price = $price * (100 - (($config['charges'] + $config['copyright']))) / 100;
+            $result = [
+                'ratedis' => $rate['withdrawal_rate'],
+                'price'   => $price
+            ];
+        }
     }else{
         if($type == 1) {
             // 提现费率
