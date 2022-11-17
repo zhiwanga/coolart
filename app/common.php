@@ -766,7 +766,7 @@ function rateLess($type = 1, $user_id, $price)
             // 提现费率
             $result = [
                 'ratedis' => 0,
-                'price'   => number_format($price - ($price * 0.015))
+                'price'   => number_format($price - ($price * 0.015), 2)
             ];
         }else{
             // 转卖费率
