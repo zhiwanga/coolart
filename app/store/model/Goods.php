@@ -63,8 +63,7 @@ class Goods extends GoodsModel
 
         $goodsInfo['cover_images'] = [
             [
-                'external_url' => 'https://coolart.space/uploads/'.$goodsInfo['cover_path'],
-                'preview_url' => 'https://coolart.space/uploads/'.$goodsInfo['cover_path'],
+                'cover_path' => 'https://coolart.space/uploads/'.$goodsInfo['cover_path']
             ]
         ];
         if (!empty($goodsInfo['first_goods_id'])){
