@@ -59,17 +59,15 @@ class Transaction extends BaseService
             return $res;
         }
 
-        if($coll['goods_id'] != 79) {
+        // 转售价格不能大于现价价格，检查是否可挂售
+        $limit_price = Db::name('goods')->field('limit_price, isresale')->where('goods_id', $coll['goods_id'])->find();
+        if($limit_price['isresale'] == 2) {
             $res['code'] = 1;
-            $res['msg'] = '该商品暂时不能挂售';
+            $res['msg'] = '该藏品暂时不能挂售';
             return $res;
         }
-
-        // 转售价格不能大于现价价格
-        $limit_price = Db::name('goods')->where('goods_id', $coll['goods_id'])->value('limit_price');
-        
-        if($limit_price != 0) {
-            if($price > $limit_price) {
+        if($limit_price['limit_price'] != 0) {
+            if($price > $limit_price['limit_price']) {
                 $res['code'] = 1;
                 $res['msg'] = '挂售价格不能大于限价';
                 return $res;
