@@ -523,11 +523,33 @@ class User extends Controller
     {
         $config = Integrals::field('charges, copyright')->find();
         $withdrawal_rate = withdrawalRate();
-        $result = [
-            'withdrawal_rate'   => $withdrawal_rate,
-            'transac_rate'      => $config['charges'],
-            'copyright'         => $config['copyright']
-        ];
+        $goods_id = discountGoods();
+        $user_id = UserService::getCurrentLoginUserId();
+
+        $rate = Db::name('coll')
+                    ->alias('a')
+                    ->leftJoin('goods b', 'a.goods_id = b.goods_id')
+                    ->leftJoin('rate_control c', 'b.rate_id = c.id')
+                    ->field('c.withdrawal_rate, c.transac_rate')
+                    ->where('a.goods_id', $goods_id)
+                    ->where('a.user_id', $user_id)
+                    ->find();
+        if($rate) {
+            $result = [
+                'sub_withdrawal_rate'   => $withdrawal_rate - $rate['withdrawal_rate'],
+                'sub_transac_rate'      => $config['charges'] - $rate['transac_rate'],
+                'withdrawal_rate'       => $withdrawal_rate,
+                'transac_rate'          => $config['charges']
+            ];
+        }else{
+            $result = [
+                'sub_withdrawal_rate'   => $withdrawal_rate,
+                'sub_transac_rate'      => $config['charges'],
+                'withdrawal_rate'       => $withdrawal_rate,
+                'transac_rate'          => $config['charges']
+            ];
+        }
+        
         return $this->renderSuccess($result, 'success');
     }
 }
