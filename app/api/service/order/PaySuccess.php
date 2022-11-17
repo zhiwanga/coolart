@@ -127,7 +127,6 @@ class PaySuccess extends BaseService
      */
     public function updateOrderInfo(int $payType, array $payData,int $blind_id)
     {
-
         if ($this->model['type'] == 0){
 
             //调用新增藏品接口
@@ -135,15 +134,8 @@ class PaySuccess extends BaseService
 
         }else{
             $transaction = Transaction::get($this->model['transaction_id']);
-            $config = Integrals::field('charges,copyright')->find();
-            
-            // 如果商品单独设置了手续费则使用商品的
-            $rate = Db::name('goods')->where('goods_id', $transaction['goods_id'])->value('rate');
-            if(0 != $rate) {
-                $config['charges'] = $rate;
-            }
 
-            $price = $transaction['price'] * (100 - ($config['charges'] + $config['copyright'])) / 100;
+            $price_data = rateLess(2, $transaction['user_id'], $transaction['price']);
             $transaction->save(['buyer_id' => $this->model['user_id'],'buytime' => time(),'status' => 1]); //交易状态修改
 
             Coll::update(['user_id' => $this->model['user_id'],'status' => 0,'addtime' => time()],['coll_id' => $transaction['coll_id']]); //转移到买房账上
@@ -153,7 +145,7 @@ class PaySuccess extends BaseService
                 ->where('coll_id',$transaction['coll_id'])
                 ->where('goods_id',$transaction['goods_id'])
                 ->update(['status'=>0]);
-            User::setIncBalance($transaction['user_id'],$price); //增加卖方余额
+            User::setIncBalance($transaction['user_id'], $price_data['price']); //增加卖方余额
         }
 
         $goodsModel = new Goods();
