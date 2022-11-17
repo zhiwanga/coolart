@@ -521,7 +521,7 @@ class User extends Controller
 
     public function ratelist()
     {
-        $config = Integrals::field('charges, copyright')->find();
+        $config = Integrals::where('id', 1)->field('charges, copyright')->find();
         $withdrawal_rate = withdrawalRate();
         $goods_id = discountGoods();
         $user_id = UserService::getCurrentLoginUserId();

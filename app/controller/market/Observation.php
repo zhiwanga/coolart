@@ -27,7 +27,7 @@ class Observation
     }
     public function test()
     {
-        $res = Rsa::privEncrypt('asdasd');
+        $res = rateLess(2, 2, 100);
         var_dump($res);die;
     }
 }

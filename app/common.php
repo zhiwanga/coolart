@@ -784,8 +784,7 @@ function rateLess($type = 1, $user_id, $price)
         }else{
             // 转卖费率
             // 如果商品单独设置了手续费则使用商品的
-            $config = Integrals::field('charges, copyright')->find();
-
+            $config = Integrals::where('id', 1)->field('charges, copyright')->find();
             $price = $price * (100 - (($config['charges'] + $config['copyright']) - $rate['withdrawal_rate'])) / 100;
 
             $result = [
