@@ -296,6 +296,9 @@ class Goods extends GoodsModel
     private function createData(array $data): array
     {
         if($data['cover_id']) {
+            if(!$data['cover_id']['0']) {
+                $data['cover_id']['0'] = $data['cover_id']['1'];
+            }
             $data['cover_path'] = Db::name('upload_file')->where('file_id', $data['cover_id']['0'])->value('file_path');
         }else{
             unset($data['cover_id']);
