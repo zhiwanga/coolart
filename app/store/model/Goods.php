@@ -227,7 +227,7 @@ class Goods extends GoodsModel
 
             // 如果商品改为上架，插入第三方实时商品表
             if($data['status'] == 10) {
-                RealtGoods::add($this['goods_id']);
+                RealtGoods::add($this['goods_id'], '', $data['goods_price_min']);
             }
             //添加队列
             $this->redisQueue($data['stock_num'],$this['goods_id']);
