@@ -102,7 +102,7 @@ class BalanceLog extends BalanceLogModel
                             ->where('a.user_id', $log['user_id'])
                             ->find();
                 if($israte) {
-                    $rate = 0.985 + $israte['withdrawal_rate'];
+                    $rate = 0.985 + ($israte['withdrawal_rate'] / 100);
                 }
                 $backMoney = floatval($diffMoney / $rate);
                 User::setIncBalance($log['user_id'],$backMoney);
