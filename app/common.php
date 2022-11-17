@@ -740,15 +740,22 @@ function discountGoods()
 }
 
 /**
+ * 获取提现手续费
+ * @return int
+ */
+function withdrawalRate()
+{
+    return 1.5;
+}
+
+/**
  * 费率减扣+价格计算
  * @param [type] $type 1：提现，2：转卖
  * @param [type] $user_id
  * @param [type] $price
- * @param [type] $goods_id 拥有该商品可以减费率
- * @param [type] $goods_rate 商品的费率
  * @return array
  */
-function rateLess($type = 1, $user_id, $price, $goods_rate = 0)
+function rateLess($type = 1, $user_id, $price)
 {
     $goods_id = discountGoods();
 
@@ -778,9 +785,7 @@ function rateLess($type = 1, $user_id, $price, $goods_rate = 0)
             // 转卖费率
             // 如果商品单独设置了手续费则使用商品的
             $config = Integrals::field('charges, copyright')->find();
-            if(0 != $goods_rate) {
-                $config['charges'] = $rate;
-            }
+
             $price = $price * (100 - (($config['charges'] + $config['copyright']) - $rate['withdrawal_rate'])) / 100;
 
             $result = [

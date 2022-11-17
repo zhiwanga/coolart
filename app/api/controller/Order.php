@@ -804,9 +804,8 @@ class Order extends Controller
                                             ->field('a.name, b.number')
                                             ->where('a.id', $transactionId)
                                             ->find();
-                // 查看商品费率
-                $rate = Db::name('goods')->where('goods_id', $transaction['goods_id'])->value('rate');
-                $price_data = rateLess(2, $transaction['user_id'], $transaction['price'], $rate);
+
+                $price_data = rateLess(2, $transaction['user_id'], $transaction['price']);
 
                 $ratedis = '';
                 if($price_data['ratedis'] != 0) {

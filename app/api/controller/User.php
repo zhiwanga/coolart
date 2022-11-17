@@ -17,6 +17,7 @@ use app\common\model\User as UserModels;
 use app\common\exception\BaseException;
 use app\api\model\UserCoupon as UserCouponModel;
 use app\api\service\User as UserService;
+use app\common\model\Integrals;
 use app\common\model\UserIdcar;
 use app\common\model\UserWallet;
 use app\controller\Rsa;
@@ -516,5 +517,17 @@ class User extends Controller
         $status = $this->getData('status');
         $balanceLog = $user->balanceLog($status);
         return $this->renderSuccess($balanceLog,'获取成功');
+    }
+
+    public function ratelist()
+    {
+        $config = Integrals::field('charges, copyright')->find();
+        $withdrawal_rate = withdrawalRate();
+        $result = [
+            'withdrawal_rate'   => $withdrawal_rate,
+            'transac_rate'      => $config['charges'],
+            'copyright'         => $config['copyright']
+        ];
+        return $this->renderSuccess($result, 'success');
     }
 }
