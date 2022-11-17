@@ -751,6 +751,7 @@ function discountGoods()
 function rateLess($type = 1, $user_id, $price, $goods_rate = 0)
 {
     $goods_id = discountGoods();
+
     $rate = Db::name('coll')
                 ->alias('a')
                 ->leftJoin('goods b', 'a.goods_id = b.goods_id')
@@ -759,6 +760,7 @@ function rateLess($type = 1, $user_id, $price, $goods_rate = 0)
                 ->where('a.goods_id', $goods_id)
                 ->where('a.user_id', $user_id)
                 ->find();
+
     if(!$rate){
         $result = [
             'ratedis' => 0,
