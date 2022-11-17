@@ -774,7 +774,7 @@ function rateLess($type = 1, $user_id, $price)
             $config = Integrals::where('id', 1)->field('charges, copyright')->find();
             $price = $price * (100 - (($config['charges'] + $config['copyright']))) / 100;
             $result = [
-                'ratedis' => $rate['withdrawal_rate'],
+                'ratedis' => 0,
                 'price'   => $price
             ];
         }

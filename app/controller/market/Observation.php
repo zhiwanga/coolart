@@ -27,7 +27,7 @@ class Observation
     }
     public function test()
     {
-        $res = rateLess(2, 2, 100);
+        $res = rateLess(2, 2, 200);
         var_dump($res);die;
     }
 }
