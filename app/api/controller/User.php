@@ -523,7 +523,6 @@ class User extends Controller
     {
         $config = Integrals::where('id', 1)->field('charges, copyright')->find();
         $withdrawal_rate = withdrawalRate();
-        $goods_id = discountGoods();
         $user_id = UserService::getCurrentLoginUserId();
 
         $rate = Db::name('coll')
@@ -531,7 +530,7 @@ class User extends Controller
                     ->leftJoin('goods b', 'a.goods_id = b.goods_id')
                     ->leftJoin('rate_control c', 'b.rate_id = c.id')
                     ->field('c.withdrawal_rate, c.transac_rate')
-                    ->where('a.goods_id', $goods_id)
+                    ->where('b.rate_id', '>', 0)
                     ->where('a.user_id', $user_id)
                     ->find();
         if($rate) {
