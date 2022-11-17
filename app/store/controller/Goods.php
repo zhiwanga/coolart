@@ -16,6 +16,7 @@ use think\response\Json;
 use app\store\model\Goods as GoodsModel;
 use app\common\exception\BaseException;
 use app\model\market\RealtGoods;
+use think\facade\Db;
 
 /**
  * 商品管理控制器
@@ -186,7 +187,8 @@ class Goods extends Controller
         // 上架把商品加到第三方实时商品表
         if($state) {
             foreach ($goodsIds as $value) {
-                RealtGoods::add($value);
+                $price = Db::name('goods')->where('goods_id', $value)->value('goods_price_min');
+                RealtGoods::add($value, '', $price);
             }
         }
         return $this->renderSuccess('操作成功');
