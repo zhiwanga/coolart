@@ -766,7 +766,7 @@ function rateLess($type = 1, $user_id, $price)
             // 提现费率
             $result = [
                 'ratedis' => 0,
-                'price'   => $price - ($price * 0.015)
+                'price'   => number_format($price - ($price * 0.015))
             ];
         }else{
             // 转卖费率
@@ -775,7 +775,7 @@ function rateLess($type = 1, $user_id, $price)
             $price = $price * (100 - (($config['charges'] + $config['copyright']))) / 100;
             $result = [
                 'ratedis' => 0,
-                'price'   => $price
+                'price'   => number_format($price, 2)
             ];
         }
     }else{
@@ -784,7 +784,7 @@ function rateLess($type = 1, $user_id, $price)
             $price = $price - ($price * (0.015 - ($rate['withdrawal_rate'] / 100)));
             $result = [
                 'ratedis'   => $rate['withdrawal_rate'],
-                'price'     => $price
+                'price'     => number_format($price, 2)
             ];
         }else{
             // 转卖费率
@@ -794,7 +794,7 @@ function rateLess($type = 1, $user_id, $price)
 
             $result = [
                 'ratedis' => $rate['withdrawal_rate'],
-                'price'   => $price
+                'price'   => number_format($price, 2)
             ];
         }
     }
