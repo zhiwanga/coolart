@@ -698,7 +698,7 @@ class Order extends OrderModel
         $myCollList = Db::name('coll')
             ->alias('c')
             // ->field('c.coll_id,c.goods_id,c.addtime,c.zztime,c.coll_no,c.status,c.goods_name,yg.goods_address,yg.logo,yg.is_box,c.image_id,no.tx_hash,us.address as usaddress,sn.number,yg.xn_sale,c.status')
-            ->field('c.coll_id,c.goods_id,no.create_time addtime, yg.cover_path, c.zztime,c.coll_no,c.status,c.goods_name,yg.goods_address,yg.logo,yg.is_box,c.image_id,no.tx_hash,us.address as usaddress,sn.number,yg.xn_sale,c.status')
+            ->field('c.coll_id,c.goods_id,no.create_time addtime, yg.cover_path, yg.rate_id, c.zztime,c.coll_no,c.status,c.goods_name,yg.goods_address,yg.logo,yg.is_box,c.image_id,no.tx_hash,us.address as usaddress,sn.number,yg.xn_sale,c.status')
             ->where($where)
             ->where($user_where)
             ->leftJoin('yoshop_goods yg','c.goods_id=yg.goods_id')
