@@ -535,8 +535,8 @@ class User extends Controller
                     ->find();
         if($rate) {
             $result = [
-                'sub_withdrawal_rate'   => number_format($withdrawal_rate - $rate['withdrawal_rate']),
-                'sub_transac_rate'      => number_format($config['charges'] - $rate['transac_rate']),
+                'sub_withdrawal_rate'   => number_format($withdrawal_rate - $rate['withdrawal_rate'], 2),
+                'sub_transac_rate'      => number_format($config['charges'] - $rate['transac_rate'], 2),
                 'withdrawal_rate'       => $withdrawal_rate,
                 'transac_rate'          => $config['charges']
             ];

@@ -73,26 +73,18 @@ class Blind extends BaseModel
             ->select();
 
         $arr = [];
-
         foreach($goods as $k=>&$g){
-
             $arr[$k] = $g['probability'];
-
-        }unset($g);
+        }
+        unset($g);
 
         //抽奖
         $res = get_rand($arr);
 
         if(isset($goods[$res]['goods_id'])){
-
             return $goods[$res]['goods_id'];
-
         }else{
-
             return 0;
         }
-
     }
-
-
 }

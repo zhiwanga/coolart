@@ -22,14 +22,12 @@ class BlindOrder extends BaseModel
     public function getPay($blind,$payType,$total,$user,$order_id,$user_car){
 
         $my_blind = self::where('user_id',$user['user_id'])
-                ->where('blind_id',$blind['id'])
-                ->where('status',1)
-                ->sum('total')+$total;
+                        ->where('blind_id',$blind['id'])
+                        ->where('status',1)
+                        ->sum('total')+$total;
 
         if($my_blind > $blind['get_limit']){
-
             return ['code'=>-1,'message'=>'该盲盒限购'.$blind['get_limit'].'次'];
-
         }
 
         $ordersn = 'BLD'.date('YmdHis').time();
@@ -39,14 +37,12 @@ class BlindOrder extends BaseModel
             $res = self::where('id',$order_id)->find();
 
             if($res['status'] != 0){
-
                 return ['code'=>-1,'message'=>'订单已支付'];
-
             }
 
             //更新订单编号
             self::where('id',$order_id)->update(['ordersn'=>$ordersn]);
-            
+
             $pay_price =  $res['price'];
 
         }else{
@@ -65,9 +61,7 @@ class BlindOrder extends BaseModel
             ]);
 
             if(!$res){
-
                 return ['code'=>-1,'message'=>'创建订单失败'];
-
             }
 
         }
@@ -76,32 +70,27 @@ class BlindOrder extends BaseModel
         try {
 
             if ($payType == 'balance') {
-
                 if ($user['balance'] < $pay_price) {
-
                     throw new Exception('用户余额不足，无法使用余额支付');
-
                 }
-
-            }else if ($payType == 'sd'){
-
-                $sd = new Sd();
-
-                $pid = $sd->pay([
-                    'user_id'       => $user['user_id'],
-                    'username'      => $user_car['idcar_name'],
-                    'idCard'        => $user_car['idcar'],
-                    'ordersn'       => $ordersn,
-                    'price'         => $pay_price,
-                    'goods_name'    => '购买盲盒',
-                    'notify_url'    => 'api/callback/blind_notify/type/sd',
-                ]);
-
-            } else{
-
+            }else{
                 throw new Exception('未找到支付方式');
-
             }
+            // else if ($payType == 'sd'){
+
+            //     $sd = new Sd();
+
+            //     $pid = $sd->pay([
+            //         'user_id'       => $user['user_id'],
+            //         'username'      => $user_car['idcar_name'],
+            //         'idCard'        => $user_car['idcar'],
+            //         'ordersn'       => $ordersn,
+            //         'price'         => $pay_price,
+            //         'goods_name'    => '购买盲盒',
+            //         'notify_url'    => 'api/callback/blind_notify/type/sd',
+            //     ]);
+
+            // }
 
             if($payType == 'balance'){
 
@@ -113,10 +102,8 @@ class BlindOrder extends BaseModel
                         $wind_id = Blind::rand_goods($blind['goods_ids']);
 
                         if(empty($wind_id)){
-
                             //未知错误
                             continue;
-
                         }
 
 
@@ -152,14 +139,12 @@ class BlindOrder extends BaseModel
                     Db::name('blind')->where('id',$blind['id'])->inc('sales',$total)->update();
 
                 }else{
-
                     $transaction = TransactionModel::get($res['transaction_id']);
-                    $config = Integrals::field('charges,copyright')->find();
-                    $price = $transaction['price'] * (100 - ($config['charges'] + $config['copyright'])) / 100;
+
+                    $price_data = rateLess(2, $transaction['user_id'], $transaction['price']);
                     $transaction->save(['buyer_id' => $user['user_id'],'buytime' => time(),'status' => 1]); //交易状态修改
                     BlindLog::update(['user_id' => $user['user_id'],'status' => 0,'type'=>0],['id' => $transaction['log_id']]); //转移到买方账上
-                    User::setIncBalance($transaction['user_id'],$price); //增加卖方余额
-
+                    User::setIncBalance($transaction['user_id'], $price_data['price']); //增加卖方余额
                 }
 
                 // 累积用户总消费金额
@@ -174,7 +159,6 @@ class BlindOrder extends BaseModel
                 ], ['order_no' => $ordersn]);
 
                 self::where('id',$res['id'])->save(['status'=>1]);
-
             }
 
             self::commit();
