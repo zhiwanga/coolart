@@ -61,11 +61,12 @@ class Goods extends GoodsModel
         
         $goodsInfo['goodsid'] = $goodsId;
 
+        $file_id = Db::name('upload_file')->where('file_path', $goodsInfo['cover_path'])->value('file_id');
         $goodsInfo['cover_path'] = [
             [
-                'file_id'       => 1,
-                'external_url'  => 'https://coolart.space/uploads/'.$goodsInfo['cover_path'],
-                'preview_url'   => 'https://coolart.space/uploads/'.$goodsInfo['cover_path'],
+                'file_id'       => $file_id,
+                'external_url'  => $goodsInfo['cover_path'],
+                'preview_url'   => $goodsInfo['cover_path'],
                 'file_path'     => $goodsInfo['cover_path']
             ]
         ];
