@@ -222,16 +222,20 @@ class Transaction extends BaseService
                         ->leftJoin('upload_file d', 'c.image_id = d.file_id')
                         ->leftJoin('goods_sn e', 'a.coll_id = e.coll_id')
                         ->leftJoin('order f', 'a.id = f.transaction_id and f.order_status = 10 and f.type = 1')
+                        ->leftJoin('goods_category_rel g', 'a.goods_id = g.goods_id')
                         ->field('a.id, a.user_id, a.coll_id, a.name, a.level, a.type, a.price, a.createtime, a.buyer_id, a.buytime, a.updatetime, a.status, a.goods_id, b.get_total, b.xn_sale, b.cover_path, d.file_path, e.number, f.order_id occupy')
                         ->where('a.buyer_id', 0)
                         ->where('a.status', 0)
-                        ->where('a.name', 'like', '%'.$keyword.'%')
-                        ->order('occupy', 'desc')
+                        ->where('a.name', 'like', '%'.$keyword.'%');
+        if (isset($param['category_id']) && $param['category_id']){
+            $list->where('g.category_id', $param['category_id']);
+        }
+        $list = $list->order('occupy', 'desc')
                         ->order($order, $type)
                         ->paginate($listRows)
                         ->toArray();
         foreach ($list['data'] as $k => $v) {
-            $list['data'][$k]['file_path'] = 'https://coolart.space/uploads/'.$v['file_path'];
+            $list['data'][$k]['goods_image'] = $v['file_path'];
         }
         return $list;
     }
