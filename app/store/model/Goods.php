@@ -60,11 +60,16 @@ class Goods extends GoodsModel
         $goodsInfo['isSpecLocked'] = GoodsService::checkSpecLocked($goodsId);
         
         $goodsInfo['goodsid'] = $goodsId;
-        
+
+        $goodsInfo['cover_images'] = [
+            [
+                'preview_url' => 'https://coolart.space/uploads/10001/'.$goodsInfo['cover_path']
+            ]
+        ];
         if (!empty($goodsInfo['first_goods_id'])){
             $goodsInfo['first_goods_id'] = json_decode($goodsInfo['first_goods_id'],true);
         }
-        
+
         // 返回商品详细信息
         return $goodsInfo;
     }
