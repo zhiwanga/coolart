@@ -64,9 +64,9 @@ class Blindpay extends Controller
         $res = (new BlindOrder())->getPay($blind_info,$pay_type,$total,$user,$order_id,$user_car);
 
         if($res['code'] != 200){
-            $redis->del('lock_'.$blind_id.$user_id);
             return $this->renderError($res['message']);
         }else{
+            $redis->del('lock_'.$blind_id.$user_id);
             return $this->renderSuccess(['url'=>$res['data']],'支付成功');
         }
     }
