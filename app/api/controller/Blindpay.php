@@ -31,10 +31,11 @@ class Blindpay extends Controller
 
         }
 
+        // 购买数量多会慢，避免重复点击造成造成损失和余额复数
         $redis = new Redis();
         if(!$redis->get('lock_'.$blind_id.$user_id)){
 
-            $redis->set('lock_'.$blind_id.$user_id,1,2);
+            $redis->set('lock_'.$blind_id.$user_id, 1, 30);
         }else{
             return $this->renderError('请勿重复点击');
         }
@@ -63,15 +64,11 @@ class Blindpay extends Controller
         $res = (new BlindOrder())->getPay($blind_info,$pay_type,$total,$user,$order_id,$user_car);
 
         if($res['code'] != 200){
-
+            $redis->del('lock_'.$blind_id.$user_id);
             return $this->renderError($res['message']);
-
         }else{
-
             return $this->renderSuccess(['url'=>$res['data']],'支付成功');
-
         }
-
     }
 
     /**
