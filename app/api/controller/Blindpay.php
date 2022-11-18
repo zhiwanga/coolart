@@ -35,7 +35,7 @@ class Blindpay extends Controller
         $redis = new Redis();
         if(!$redis->get('lock_'.$blind_id.$user_id)){
 
-            $redis->set('lock_'.$blind_id.$user_id, 1, 30);
+            $redis->set('lock_'.$blind_id.$user_id, 1, 5);
         }else{
             return $this->renderError('请勿重复点击');
         }
@@ -66,7 +66,6 @@ class Blindpay extends Controller
         if($res['code'] != 200){
             return $this->renderError($res['message']);
         }else{
-            $redis->del('lock_'.$blind_id.$user_id);
             return $this->renderSuccess(['url'=>$res['data']],'支付成功');
         }
     }
