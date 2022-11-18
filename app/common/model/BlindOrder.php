@@ -103,6 +103,7 @@ class BlindOrder extends BaseModel
                             'goods_id'  => $wind_id,
                             'user_id'   => $user['user_id'],
                             'store_id'  => 10001,
+                            'order_id'  => $res['id']
                         ]);
 
                         // 没中奖
