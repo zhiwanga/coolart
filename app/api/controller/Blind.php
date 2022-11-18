@@ -73,7 +73,7 @@ class Blind extends Controller
             ->where('goods_id','in',$goodsInfo['goods_ids'])
             ->where('stock_total','>',0)
             ->where('is_box',1)
-            ->field('goods_id,goods_name,sales_initial,sales_actual,probability,goods_price_min,starttime')
+            ->field('goods_id,xn_sale,goods_name,sales_initial,sales_actual,probability,goods_price_min,starttime')
             ->select();
 
         $goodsInfo['goods'] = $goods;
@@ -85,8 +85,8 @@ class Blind extends Controller
             // 商品主图
             $g['goods_image'] = current($goods_images)['preview_url'];
 
-        }unset($g);
-
+        }
+        unset($g);
         $goodsInfo['win_id'] =0;
 
         return $this->renderSuccess(['goodsinfo'=>$goodsInfo,'time'=>date('Y-m-d H:i:s')]);
