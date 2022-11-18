@@ -145,7 +145,7 @@ class PaySuccess extends BaseService
                 ->where('coll_id',$transaction['coll_id'])
                 ->where('goods_id',$transaction['goods_id'])
                 ->update(['status'=>0]);
-            User::setIncBalance($transaction['user_id'], $price_data['price']); //增加卖方余额
+            User::setIncBalance(intval($transaction['user_id']), floatval($price_data['price'])); //增加卖方余额
         }
 
         $goodsModel = new Goods();
