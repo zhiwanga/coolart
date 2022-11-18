@@ -23,7 +23,11 @@ class BlindOrder extends BaseModel
                         ->where('status',1)
                         ->sum('total')+$total; // 统计总共购买此盲盒数量
 
-        if($my_blind > $blind['get_limit']){
+        $addUser = thantime($user['user_id']);
+
+        $get_limit = $blind['get_limit'] + $addUser;
+        // 之前购买的加上这次购买 大于 限购数量加可可多购买几次
+        if($my_blind > $get_limit){
             return ['code'=>-1,'message'=>'该盲盒限购'.$blind['get_limit'].'次'];
         }
 

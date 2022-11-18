@@ -800,3 +800,24 @@ function rateLess($type = 1, $user_id, $price)
     }
     return $result;
 }
+
+/**
+ * 获取某个日期之后邀请的人数
+ * @param [type] $user_id
+ * @return int
+ */
+function thantime($user_id)
+{
+    $thantime = strtotime('2022-11-19');
+    $thanUserCount = Db::name('user')
+                        ->where('create_time', '>=', $thantime)
+                        ->where('idcar_id', '>', 0)
+                        ->where('extension_id', $user_id)
+                        ->count();
+    $flor = floor($thanUserCount / 3);
+    if($flor > 0) {
+        return $flor;
+    }else{
+        return 0;
+    }
+}

@@ -551,4 +551,11 @@ class User extends Controller
         
         return $this->renderSuccess($result, 'success');
     }
+
+    public function extensionCount()
+    {
+        $user_id = UserService::getCurrentLoginUserId();
+        $res = thantime($user_id);
+        return $this->renderSuccess(['count' => $res], 'success');
+    }
 }
