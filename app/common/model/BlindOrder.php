@@ -92,13 +92,21 @@ class BlindOrder extends BaseModel
             if($payType == 'balance'){
 
                 if($res['type'] == 0){
-                    // 将随机选中的盲盒数量减少一个
-                    for($i=1;$i<=$total;$i++){
+                    // 购买多个盲盒进行抽奖
+                    for($i=1; $i<=$total; $i++){
+                        
+                        $wind_id = $this->blindRand($blind['sales'], $blind['total'], $blind['goods_ids']);
 
-                        $wind_id = Blind::rand_goods($blind['goods_ids']);
+                        // 中不中奖都记录
+                        $blindLog = BlindLog::create([
+                            'blind_id'  => $blind['id'],
+                            'goods_id'  => $wind_id,
+                            'user_id'   => $user['user_id'],
+                            'store_id'  => 10001,
+                        ]);
 
-                        if(empty($wind_id)){
-                            //未知错误
+                        // 没中奖
+                        if(empty($wind_id) || $wind_id == 0) {
                             continue;
                         }
 
@@ -113,13 +121,6 @@ class BlindOrder extends BaseModel
                             ->where('goods_id', $wind_id)
                             ->dec('stock_total')
                             ->update();
-
-                        $blindLog = BlindLog::create([
-                            'blind_id'  => $blind['id'],
-                            'goods_id'  => $wind_id,
-                            'user_id'   => $user['user_id'],
-                            'store_id'  => 10001,
-                        ]);
 
                         // 获取中奖记录的ID
                         $log_id = $blindLog->id;
@@ -266,5 +267,48 @@ class BlindOrder extends BaseModel
         //随机获取
         $key = array_rand($diff);
         return $diff[$key];
+    }
+
+    /**
+     * 盲盒抽奖获取中奖商品ID
+     *
+     * @param [type] $sales
+     * @param [type] $total
+     * @param [type] $goods_ids
+     * @return void
+     */
+    public function blindRand($sales, $total, $goods_ids)
+    {
+        // 如果没库存了，返回未中奖
+        if($total <= 0) {
+            return 0;
+        }
+        $goods = Db::name('goods')->field('goods_id, probability')
+                                    ->where('goods_id', 'in', $goods_ids)
+                                    ->where('stock_total', '>', 0)
+                                    ->where('is_box', 1)
+                                    ->order('probability', 'asc') // 正序最先匹配最低中将概率的商品
+                                    ->select()
+                                    ->toArray();
+
+        $goods_arr = [];
+        foreach($goods as $v){
+            $goods_arr[$v['goods_id']] = $v['probability'];
+        }
+
+        // 概率数组的总概率精度
+        $proSum = $sales+$total;
+
+        $result = 0;
+        // 概率数组循环
+        foreach ($goods_arr as $key => $proCur) {
+            $randNum = mt_rand(1, $proSum);
+            if ($randNum <= $proCur) {
+                $result = $key;
+                break;
+            }
+        }
+
+        return $result;
     }
 }
