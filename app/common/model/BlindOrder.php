@@ -275,7 +275,7 @@ class BlindOrder extends BaseModel
      * @param [type] $sales
      * @param [type] $total
      * @param [type] $goods_ids
-     * @return void
+     * @return int
      */
     public function blindRand($sales, $total, $goods_ids)
     {
