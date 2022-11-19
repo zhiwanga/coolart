@@ -66,7 +66,7 @@ class Blindpay extends Controller
         if($res['code'] != 200){
             return $this->renderError($res['message']);
         }else{
-            return $this->renderSuccess(['url'=>$res['data']],'支付成功');
+            return $this->renderSuccess(['data'=>$res['data']], '支付成功');
         }
     }
 

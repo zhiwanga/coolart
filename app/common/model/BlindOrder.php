@@ -96,11 +96,12 @@ class BlindOrder extends BaseModel
             if($payType == 'balance'){
 
                 if($res['type'] == 0){
+                    $goods_ids = [];
                     // 购买多个盲盒进行抽奖
                     for($i=1; $i<=$total; $i++){
                         
                         $wind_id = $this->blindRand($blind['sales'], $blind['total'], $blind['goods_ids']);
-
+                        array_push($goods_ids, $wind_id);
                         // 中不中奖都记录
                         $blindLog = BlindLog::create([
                             'blind_id'  => $blind['id'],
@@ -168,7 +169,7 @@ class BlindOrder extends BaseModel
 
             self::commit();
 
-            return ['code'=>200,'message'=>'ok','data'=>isset($pid) && !empty($pid)?$pid:0];
+            return ['code'=>200,'message'=>'ok','data'=> $goods_ids];
 
         }catch (Exception $e){
             self::rollback();
@@ -302,8 +303,8 @@ class BlindOrder extends BaseModel
         }
 
         // 概率数组的总概率精度
-        $proSum = $sales+$total;
-
+        // $proSum = $sales+$total;
+        $proSum = array_sum($goods_arr);
         $result = 0;
         // 概率数组循环
         foreach ($goods_arr as $key => $proCur) {
@@ -311,6 +312,8 @@ class BlindOrder extends BaseModel
             if ($randNum <= $proCur) {
                 $result = $key;
                 break;
+            }else {
+                $proSum -= $proCur;
             }
         }
 

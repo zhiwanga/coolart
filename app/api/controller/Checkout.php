@@ -1175,13 +1175,12 @@ class Checkout extends Controller
     public function qxorder(){
 
         $order_id = $this->request->param('order_id','');
+        $user_id = UserService::getCurrentLoginUserId();
 
-        $order_info = OrderModel::where('order_id',$order_id)->find();
+        $order_info = OrderModel::where('order_id',$order_id)->where('user_id', $user_id)->find();
 
         if(empty($order_info) || $order_info['is_delete'] == 1){
-
-            return $this->renderError('该订单已关闭');
-
+            return $this->renderError('参数错误');
         }
 
        $res = $order_info->save([
