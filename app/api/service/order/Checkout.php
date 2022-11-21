@@ -888,6 +888,16 @@ class Checkout extends BaseService
 
         $boxMoneys = $goodlist['goods_price_min'] * $goodssum;
 
+        // 查找是否可以零元购
+        $zero_buy = isZeroBuy($userid, $goodsid);
+        if($zero_buy > 0) {
+            if($goodssum > $zero_buy) {
+                return false;
+            }else{
+                $boxMoneys = 0;
+            }
+        }
+
         //填充需要的数据
         $goodsarr = [
             'total_price'       => $boxMoneys,
@@ -902,7 +912,7 @@ class Checkout extends BaseService
             'goods_sum'         => $goodssum,
             'order_no'          => $orderNo,
             'points_bonus'      => $goodlist['goods_price_max'], //赠送的积分数量
-            'is_box'            => 0   ,
+            'is_box'            => 0,
             'pay_type'          => $payType,
         ];
 

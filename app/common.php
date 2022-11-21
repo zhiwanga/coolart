@@ -814,10 +814,63 @@ function thantime($user_id)
                         ->where('idcar_id', '>', 0)
                         ->where('extension_id', $user_id)
                         ->count();
-    $flor = floor($thanUserCount / 3);
+    $flor = floor($thanUserCount / 5);
     if($flor > 0) {
         return $flor;
     }else{
         return 0;
     }
+}
+
+/**
+ * 查看是否可以零元购
+ * @param [type] $user_id
+ * @param [type] $goods_id
+ * @return int 还可以零元购的次数
+ */
+function isZeroBuy($user_id, $goods_id)
+{
+    // 查找被购买的商品的分类
+    $category_id = Db::name('goods_category_rel')->where('goods_id', $goods_id)->value('category_id');
+
+    // 查看被购买商品是否可以零元购
+    $sure_id = Db::name('hold_appoint')
+                ->where('classify', $category_id)
+                ->whereOr('classify', 'like', '%'.$category_id.',%')
+                ->value('goods_id');
+
+    // 查看一共可以零元购多少次
+    $total_count = Db::name('coll')->where('goods_id', $sure_id)->where('user_id', $user_id)->where('status', 0)->count();
+
+    // 查看被购买商品买过多少次
+    $alreadyBuy = Db::name('hold_log')->where('user_id', $user_id)->where('goods_id', $goods_id)->sum('sum');
+    $sureBuy = $total_count - $alreadyBuy;
+    if($sureBuy > 0) {
+        return $sureBuy;
+    }else{
+        return 0;
+    }
+}
+
+/**
+ * 查看总共可以零元购多少次
+ * @param [type] $user_id
+ * @param [type] $goods_id
+ * @return boolean
+ */
+function isZeroBuyCount($user_id, $goods_id)
+{
+    // 查找被购买的商品的分类
+    $category_id = Db::name('goods_category_rel')->where('goods_id', $goods_id)->value('category_id');
+
+    // 查看被购买商品是否可以零元购
+    $sure_id = Db::name('hold_appoint')
+                ->where('classify', $category_id)
+                ->whereOr('classify', 'like', '%'.$category_id.',%')
+                ->value('goods_id');
+
+    // 查看一共可以零元购多少次
+    $total_count = Db::name('coll')->where('goods_id', $sure_id)->where('user_id', $user_id)->where('status', 0)->count();
+
+    return $total_count;
 }
