@@ -17,19 +17,16 @@ class HoldAppoint extends Controller
         $classify = implode(',', $input['classify']);
         try {
             $cate = Db::name('category')->field('name')->whereIn('category_id', $classify)->select()->toArray();
-            $blind_name = Db::name('coll')->where('goods_id', $input['goods_id'])->value('blind_name');
-            if(!$cate) {
-                return $this->renderError('分类不存在');
-            }
+            $goods_name = Db::name('goods')->where('goods_id', $input['goods_id'])->value('goods_name');
             $classify_name = implode(',', array_column($cate, 'name'));
             $insert = [
-                'classify'          => $classify,
-                'blind_id'          => $input['blind_id'],
-                'blind_name'        => $blind_name,
-                'classify_name'     => $classify_name,
-                'number'            => $input['number'],
-                'max_number'        => $input['max_number'],
-                'remarks'           => $input['remarks'],
+                'classify'          => $classify.',',       // 可以零元购这些分类下面的商品
+                'goods_id'          => $input['goods_id'],  // 持有此商品可以零元购
+                'goods_name'        => $goods_name,         // 商品名称显示用
+                'classify_name'     => $classify_name,      // 分类名称显示用
+                // 'number'            => $input['number'],    // 持有几个可以零元购一次
+                // 'max_number'        => $input['max_number'],// 总共可以零元购多少次
+                'remarks'           => $input['remarks'],   // 备注信息
                 'create_time'       => time()
             ];
             Db::name('hold_appoint')->insert($insert);
@@ -45,18 +42,16 @@ class HoldAppoint extends Controller
         $classify = implode(',', $input['classify']);
         try {
             $cate = Db::name('category')->field('name')->whereIn('category_id', $classify)->select()->toArray();
-            $blind_name = Db::name('blind')->where('id', $input['blind_id'])->value('blind_name');
-            if(!$cate) {
-                return $this->renderError('分类不存在');
-            }
+            $goods_name = Db::name('goods')->where('goods_id', $input['goods_id'])->value('goods_name');
+
             $classify_name = implode(',', array_column($cate, 'name'));
             $update = [
-                'classify'          => $classify,
+                'classify'          => $classify.',',
                 'classify_name'     => $classify_name,
-                'blind_id'          => $input['blind_id'],
-                'blind_name'        => $blind_name,
-                'number'            => $input['number'],
-                'max_number'        => $input['max_number'],
+                'goods_id'          => $input['goods_id'],
+                'goods_name'        => $goods_name,
+                // 'number'            => $input['number'],
+                // 'max_number'        => $input['max_number'],
                 'remarks'           => $input['remarks'],
                 'update_time'       => time()
             ];
@@ -91,10 +86,10 @@ class HoldAppoint extends Controller
         $input = input();
         try {
             $info = Db::name('hold_appoint')
-                        ->field('id, classify, blind_id, blind_name, max_number, number, classify_name, remarks, from_unixtime(create_time,"%Y-%m-%d %H:%i") create_time, from_unixtime(update_time,"%Y-%m-%d %H:%i") update_time')
+                        ->field('id, classify, goods_id, goods_name, classify_name, remarks, from_unixtime(create_time,"%Y-%m-%d %H:%i") create_time, from_unixtime(update_time,"%Y-%m-%d %H:%i") update_time')
                         ->where('id', $input['id'])
                         ->find();
-            $info['classify']       = explode(',', $info['classify']);
+            $info['classify']       = explode(',', trim($info['classify'], ','));
             $info['classify_name']  = explode(',', $info['classify_name']);
             return $this->renderSuccess($info, 'success');
         } catch (\Throwable $th) {
@@ -105,10 +100,10 @@ class HoldAppoint extends Controller
     public function list()
     {
         $list = Db::name('hold_appoint')
-                    ->field('id, classify_name, blind_name, max_number, number, remarks, from_unixtime(create_time,"%Y-%m-%d %H:%i") create_time, from_unixtime(update_time,"%Y-%m-%d %H:%i") update_time')
+                    ->field('id, classify_name, goods_name, goods_id, remarks, from_unixtime(create_time,"%Y-%m-%d %H:%i") create_time, from_unixtime(update_time,"%Y-%m-%d %H:%i") update_time')
                     ->select()
                     ->toArray();
-        
+
         return $this->renderSuccess($list, 'success');
     }
 }
