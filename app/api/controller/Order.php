@@ -334,6 +334,7 @@ class Order extends Controller
         if($isgive['isgive'] == 2) {
             return $this->renderError('该藏品暂时不能转赠');
         }
+
         $user_id = UserService::getCurrentLoginUserId();
 
         // rsa密钥检测
