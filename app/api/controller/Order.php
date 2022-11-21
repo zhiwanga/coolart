@@ -322,7 +322,18 @@ class Order extends Controller
         $heUserId=$posta['heuserid'];
         
         return $this->renderError('限时关闭转赠功能！');
-
+        // 检查是否可转增
+        $isgive = Db::name('coll')
+                            ->alias('a')
+                            ->leftJoin('goods b', 'a.goods_id = b.goods_id')
+                            ->field('b.isgive')
+                            ->where('a.coll_id', $collId)->find();
+        if(!$isgive) {
+            return $this->renderError('该藏品暂时不能转赠');
+        }
+        if($isgive['isgive'] == 2) {
+            return $this->renderError('该藏品暂时不能转赠');
+        }
         $user_id = UserService::getCurrentLoginUserId();
 
         // rsa密钥检测

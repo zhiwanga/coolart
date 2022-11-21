@@ -654,9 +654,17 @@ class Checkout extends Controller
                 $payModel->updatePayInfo(10);
 
                 // 对接第三方市场，实时更新藏品价格 2022/11/07
-                RealtGoods::add($goodsId, $res['order_no'], $res['pay_price']);
+                if($res['pay_price'] > 0){
+                    RealtGoods::add($goodsId, $res['order_no'], $res['pay_price']);
+                }
                 // 更新订单状态为已支付
                 Db::name('order')->where('order_no', $res['order_no'])->update(['order_status' => 30]);
+                Db::name('hold_log')->insert([
+                    'user_id' => $user['user_id'],
+                    'goods_id' => $goodsId,
+                    'sum' => $total,
+                    'order_no' => $res['order_no']
+                ]);
                 Db::commit();
 
                 return $this->renderSuccess('购买成功');
@@ -1204,6 +1212,19 @@ class Checkout extends Controller
 
             return $this->renderError('关闭出错');
 
+        }
+    }
+
+    public function isZeroTimes()
+    {
+        try {
+            $input = input();
+            $user_id = UserService::getCurrentLoginUserId();
+            $goods_id = $input['goods_id'];
+            $res = isZeroBuy($user_id, $goods_id);
+            return $this->renderSuccess(['data' => $res], 'success');
+        } catch (\Throwable $th) {
+            return $this->renderError('参数错误');
         }
     }
 }

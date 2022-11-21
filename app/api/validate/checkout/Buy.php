@@ -20,7 +20,7 @@ class Buy extends Validate
      */
     protected $rule = [
         'goodsId'   => ['require','checkout'],
-        'total'     => ['require','between:1,1'],
+        'total'     => ['require'],
         'pay_type'  => ['require']
     ];
 
@@ -133,49 +133,24 @@ class Buy extends Validate
 
         if($goods_info['get_limit'] > 0){
 
+            $buyCount = isZeroBuyCount($user_id, $goods_info['goods_id']);
             $my_coll = Order::where('user_id',$user_id)
-                    ->where('is_delete',0)
-                    ->where('goods_id',$goods_info['goods_id'])
-                    ->sum('goods_sum')+$data['total'];
-
-            /**优先购份数**/
-           /* $first_num = 0;
-
-            if(!empty($goods_info['first_goods_num']) && time() < strtotime($goods_info['startTime'])){
-
-                foreach($goods_info['first_goods_num'] as $f=>$n){
-
-                    //获取指定藏品总数
-                    $coll_num = Coll::where('user_id',$user_id)
-                            ->where('goods_id',$f)
-                            ->where('is_give',0)
-                            ->count()*$n;
-
-                    $first_num += $coll_num;
-
+                            ->where('is_delete',0)
+                            ->where('goods_id',$goods_info['goods_id'])
+                            ->sum('goods_sum')+$data['total'];
+            if($buyCount > 0) {
+                if($my_coll > $buyCount){
+                    return '该商品限购'.$buyCount.'次';
                 }
-
-                if($my_coll > $first_num){
-
-                    return '可优先购'.$first_num.'次';
-
-                }
-
-            }else{*/
-
+            }else{
                 if($my_coll > $goods_info['get_limit']){
-
-                   return '该商品限购'.$goods_info['get_limit'].'次';
-
+                    return '该商品限购'.$goods_info['get_limit'].'次';
                 }
-            //}
-
+            }
         }
 
         for($i=1;$i<=$data['total'];$i++){
-
             $redis->rpop($name); //出列
-
         }
 
         return true;
